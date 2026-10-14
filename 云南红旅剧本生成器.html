@@ -1,0 +1,5226 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>云南红旅沉浸式剧本生成器</title>
+  <style>
+/* 云南红旅沉浸式剧本生成器 - 红色主题样式 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #c0392b;
+  --primary-dark: #922b21;
+  --primary-light: #e74c3c;
+  --gold: #d4af37;
+  --gold-light: #f4d03f;
+  --bg-dark: #1a1a1a;
+  --bg-light: #fdf6e3;
+  --text-dark: #2c3e50;
+  --text-light: #7f8c8d;
+  --border: #e0e0e0;
+}
+
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  background: linear-gradient(135deg, #fdf6e3 0%, #f5e6d3 100%);
+  color: var(--text-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* 顶部横幅 */
+.header {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+  color: white;
+  padding: 32px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(192, 57, 43, 0.3);
+}
+
+.header::before {
+  content: "★";
+  position: absolute;
+  font-size: 200px;
+  opacity: 0.08;
+  top: -30px;
+  right: 30px;
+  color: var(--gold);
+}
+
+.header::after {
+  content: "★";
+  position: absolute;
+  font-size: 120px;
+  opacity: 0.06;
+  bottom: -20px;
+  left: 40px;
+  color: white;
+}
+
+.header h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
+  letter-spacing: 4px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.header .subtitle {
+  font-size: 15px;
+  opacity: 0.92;
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.header .star-divider {
+  color: var(--gold-light);
+  margin: 0 8px;
+}
+
+/* 主体容器 */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+/* 控制面板 */
+.control-panel {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  border: 2px solid var(--gold);
+}
+
+.panel-title {
+  font-size: 20px;
+  color: var(--primary);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px dashed var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.form-group select,
+.form-group input {
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s;
+  background: #fafafa;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* 生成按钮 */
+.generate-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 4px;
+  box-shadow: 0 4px 14px rgba(192, 57, 43, 0.35);
+  margin-top: 8px;
+}
+
+.generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(192, 57, 43, 0.45);
+}
+
+.generate-btn:active {
+  transform: translateY(0);
+}
+
+/* 操作按钮组 */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 10px 20px;
+  border: 2px solid var(--primary);
+  background: white;
+  color: var(--primary);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.action-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* 加载动画 */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading .spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid var(--border);
+  border-top: 5px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading p {
+  color: var(--primary);
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+/* 结果区域 */
+#resultArea {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* 剧本头部 */
+.script-header {
+  text-align: center;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 28px;
+}
+
+.script-title {
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.script-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.script-meta .tag {
+  background: var(--gold);
+  color: var(--primary-dark);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.meta-item {
+  font-size: 14px;
+  opacity: 0.95;
+}
+
+.generated-at {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* 章节样式 */
+.script-section {
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-size: 20px;
+  color: var(--primary);
+  padding: 10px 0 10px 14px;
+  border-left: 5px solid var(--gold);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 16px;
+}
+
+.title-icon {
+  margin-right: 8px;
+}
+
+.section-content {
+  padding: 0 8px;
+  line-height: 1.8;
+}
+
+.sub-title {
+  font-weight: bold;
+  color: var(--primary-dark);
+  margin: 8px 0 4px;
+}
+
+.list-item {
+  padding-left: 16px;
+  position: relative;
+}
+
+.list-item::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+}
+
+/* 角色卡片 */
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.character-card {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fff9f0 0%, #fff 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.character-card:hover {
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.15);
+  transform: translateY(-2px);
+}
+
+.char-avatar {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.char-info {
+  flex: 1;
+}
+
+.char-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--primary-dark);
+  margin-bottom: 2px;
+}
+
+.fiction-tag {
+  font-size: 11px;
+  background: #95a5a6;
+  color: white;
+  padding: 1px 8px;
+  border-radius: 10px;
+  margin-left: 4px;
+}
+
+.real-tag {
+  font-size: 11px;
+  background: #27ae60;
+  color: white;
+  padding: 1px 8px;
+  border-radius: 10px;
+  margin-left: 4px;
+}
+
+.char-identity {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+
+.char-desc {
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: var(--text-dark);
+}
+
+.char-task,
+.char-clue {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* 分幕卡片 */
+.act-card {
+  background: #fafafa;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 14px;
+  border-left: 4px solid var(--primary);
+}
+
+.act-title {
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.act-duration {
+  font-size: 12px;
+  color: var(--text-light);
+  font-weight: normal;
+  margin-left: 8px;
+}
+
+.act-content {
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.scene-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--text-light);
+  margin: 8px 0;
+  flex-wrap: wrap;
+}
+
+.stage-direction {
+  font-style: italic;
+  color: #8e6f3e;
+  background: #fff8e7;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 8px 0;
+  font-size: 13px;
+}
+
+.scene-content {
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+
+.scene-audio {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* 线索卡 */
+.clue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.clue-card {
+  background: linear-gradient(135deg, #fffbf0 0%, #fff5e0 100%);
+  border: 1px solid #e8d5a3;
+  border-radius: 8px;
+  padding: 14px;
+  position: relative;
+}
+
+.clue-num {
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.clue-type {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.clue-content {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* 机制卡片 */
+.mechanism-card {
+  background: #f0f8ff;
+  border: 1px solid #b8d4e3;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+
+.mech-name {
+  font-weight: bold;
+  color: #2471a3;
+  margin-bottom: 4px;
+}
+
+.mech-desc {
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+/* 精神卡片 */
+.spirit-section {
+  background: linear-gradient(135deg, rgba(192, 57, 43, 0.03) 0%, rgba(212, 175, 55, 0.05) 100%);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.spirit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.spirit-card {
+  text-align: center;
+  padding: 16px 12px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid var(--gold);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
+}
+
+.spirit-name {
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.spirit-desc {
+  font-size: 12px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* 关卡卡片 */
+.level-card {
+  background: linear-gradient(135deg, #f0fff4 0%, #fff 100%);
+  border: 1px solid #a9dfbf;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.level-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.level-num {
+  background: var(--primary);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.level-name {
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--primary-dark);
+}
+
+.level-location {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+
+.level-knowledge {
+  font-size: 13px;
+  color: #1e8449;
+  margin-bottom: 12px;
+}
+
+.question-block {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+.question-block.challenge {
+  border-left: 4px solid #e67e22;
+  background: #fef9e7;
+}
+
+.q-level {
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.q-text {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.q-options {
+  margin-bottom: 8px;
+}
+
+.q-option {
+  font-size: 13px;
+  padding: 2px 0;
+}
+
+.q-answer {
+  font-size: 13px;
+  color: #196f3d;
+  margin-top: 6px;
+}
+
+.q-analysis {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+.level-task {
+  margin-top: 10px;
+  padding: 10px;
+  background: #fef9e7;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* 关卡地图 */
+.level-map-box {
+  background: linear-gradient(135deg, #f0f8ff 0%, #e8f4f8 100%);
+  border: 1px solid #b8d4e3;
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.map-route {
+  font-size: 15px;
+  color: #1a5276;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.map-distance {
+  font-size: 13px;
+  color: #2471a3;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.map-locations {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-loc-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 6px;
+  border-left: 3px solid #2471a3;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.map-loc-order {
+  width: 24px;
+  height: 24px;
+  background: #2471a3;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.map-loc-name {
+  font-weight: bold;
+  color: #1a5276;
+}
+
+.map-loc-type {
+  font-size: 11px;
+  color: #2471a3;
+  background: #d4e6f1;
+  padding: 1px 8px;
+  border-radius: 8px;
+}
+
+.map-loc-knowledge {
+  font-size: 12px;
+  color: #666;
+  margin-left: auto;
+}
+
+/* 实物任务 */
+.physical-task {
+  margin: 12px 0;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #fef9e7 0%, #fdebd0 100%);
+  border: 1px solid #f5cba7;
+  border-radius: 8px;
+}
+
+.task-header {
+  font-weight: bold;
+  color: #b9770e;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.task-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+.task-item {
+  font-size: 12px;
+  color: #7e5109;
+  font-style: italic;
+}
+
+.level-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+/* 装备包清单 */
+.equipment-category {
+  margin-bottom: 14px;
+}
+
+.equip-cat-name {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--primary);
+  margin-bottom: 6px;
+  padding-left: 8px;
+  border-left: 3px solid var(--gold);
+}
+
+/* 积分规则全宽项 */
+.scoring-item.full-width {
+  grid-column: 1 / -1;
+}
+
+/* 一句话定位 */
+.positioning-box {
+  background: linear-gradient(135deg, #fff9f0 0%, #fef5e7 100%);
+  border-left: 4px solid var(--gold);
+  padding: 18px 22px;
+  border-radius: 0 10px 10px 0;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--primary-dark);
+  font-weight: 500;
+}
+
+/* 玩法选择卡片 */
+.gameplay-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  border-left: 4px solid var(--primary);
+}
+
+.gameplay-type {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 2px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.gameplay-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+
+.gameplay-reason {
+  font-size: 13px;
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+/* 关卡地图表格 */
+.map-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.map-table th {
+  background: var(--primary);
+  color: white;
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.map-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.map-table tr:nth-child(even) td {
+  background: #fafafa;
+}
+
+/* 题目元信息 */
+.q-meta {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.verified-badge {
+  display: inline-block;
+  background: #27ae60;
+  color: white;
+  padding: 1px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* 实物任务详情网格 */
+.task-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.task-detail-grid > div:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+/* 四档评奖 */
+.awards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.award-card {
+  background: linear-gradient(135deg, #fdf6e3 0%, #faf0d7 100%);
+  border: 1px solid var(--gold);
+  border-radius: 10px;
+  padding: 14px 10px;
+  text-align: center;
+}
+
+.award-tier {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+}
+
+.award-condition {
+  font-size: 12px;
+  color: #8e6f3e;
+  margin-bottom: 6px;
+}
+
+.award-prize {
+  font-size: 12px;
+  color: var(--text-dark);
+}
+
+/* 装备包表格 */
+.equip-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.equip-table th {
+  background: #5d6d7e;
+  color: white;
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.equip-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.equip-table tr:nth-child(even) td {
+  background: #f8f9fa;
+}
+
+.equip-required {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.equip-required.req {
+  background: #e74c3c;
+  color: white;
+}
+
+.equip-required.opt {
+  background: #95a5a6;
+  color: white;
+}
+
+/* 终局仪式 */
+.ending-box {
+  background: linear-gradient(135deg, #f0fff4 0%, #eafaf1 100%);
+  border: 1px solid #a9dfbf;
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.ending-meta {
+  font-size: 14px;
+  color: #1e8449;
+  margin-bottom: 12px;
+}
+
+.ending-stages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.ending-stage {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+}
+
+.stage-order {
+  width: 30px;
+  height: 30px;
+  background: #27ae60;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.stage-info {
+  flex: 1;
+}
+
+.stage-name {
+  font-weight: bold;
+  color: #1e8449;
+  font-size: 14px;
+}
+
+.stage-duration {
+  font-size: 12px;
+  color: #5d6d7e;
+  font-weight: normal;
+}
+
+.stage-content {
+  font-size: 13px;
+  color: var(--text-dark);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.host-script-box {
+  background: #fef9e7;
+  border-left: 3px solid var(--gold);
+  padding: 12px 14px;
+  border-radius: 0 6px 6px 0;
+  margin: 12px 0;
+}
+
+.host-script {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #7e5109;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.ending-materials {
+  font-size: 13px;
+  color: var(--text-dark);
+  margin-top: 8px;
+}
+
+/* 落地待办 */
+.todos-box {
+  background: #fff5f5;
+  border: 1px dashed #e74c3c;
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.todo-item {
+  padding: 6px 0;
+  font-size: 13px;
+  color: #922b21;
+  border-bottom: 1px dashed #f5b7b1;
+  line-height: 1.5;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+/* 积分规则 */
+.scoring-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.scoring-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.scoring-label {
+  font-weight: bold;
+  color: var(--primary);
+  min-width: 70px;
+}
+
+/* 道具列表 */
+.props-list {
+  list-style: none;
+  padding: 0;
+}
+
+.props-list li {
+  padding: 8px 0 8px 24px;
+  position: relative;
+  border-bottom: 1px dashed var(--border);
+}
+
+.props-list li::before {
+  content: "✦";
+  position: absolute;
+  left: 4px;
+  color: var(--gold);
+}
+
+.props-list li:last-child {
+  border-bottom: none;
+}
+
+/* 开场收尾 */
+.opening-box,
+.closing-box {
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.opening-box {
+  background: #fef9e7;
+  border-left: 4px solid var(--gold);
+}
+
+.closing-box {
+  background: #f0fff4;
+  border-left: 4px solid #27ae60;
+}
+
+/* 错误提示 */
+.error-box {
+  text-align: center;
+  padding: 40px 20px;
+  background: #fff5f5;
+  border: 2px solid #f5b7b1;
+  border-radius: 12px;
+}
+
+.error-box h3 {
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+/* 页脚 */
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-light);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+.footer .star {
+  color: var(--gold);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .script-title {
+    font-size: 22px;
+  }
+
+  .scoring-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   🎮 闯关游戏样式
+   ============================================================ */
+
+/* 按钮组 */
+.btn-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-group .generate-btn,
+.btn-group .game-btn {
+  flex: 1;
+}
+
+.game-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+  color: var(--primary-dark);
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 4px;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+}
+
+.game-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
+}
+
+/* 游戏开始页 */
+.game-start {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.game-start-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 32px;
+  text-align: center;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(192, 57, 43, 0.12);
+  border: 3px solid var(--gold);
+}
+
+.game-start-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.game-start-title {
+  font-size: 28px;
+  color: var(--primary);
+  margin-bottom: 12px;
+  letter-spacing: 4px;
+}
+
+.game-start-spot {
+  font-size: 18px;
+  color: var(--primary-dark);
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.game-start-desc {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  padding: 0 8px;
+}
+
+.game-start-info {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fff9f0 0%, #fff5e0 100%);
+  border-radius: 12px;
+}
+
+.info-item {
+  text-align: center;
+}
+
+.info-num {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.info-label {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.game-start-tip {
+  font-size: 13px;
+  color: #8e6f3e;
+  background: #fff8e7;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.game-big-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 4px;
+  box-shadow: 0 4px 14px rgba(192, 57, 43, 0.35);
+  transition: all 0.3s;
+}
+
+.game-big-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(192, 57, 43, 0.45);
+}
+
+/* 题目页面 */
+.game-question {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.game-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.game-spot-name {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--primary-dark);
+}
+
+.game-score {
+  font-size: 15px;
+  color: var(--text-dark);
+}
+
+.score-num {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--gold);
+}
+
+.game-progress-bar {
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.game-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--gold) 100%);
+  transition: width 0.4s ease;
+  border-radius: 4px;
+}
+
+.game-progress-text {
+  font-size: 13px;
+  color: var(--text-light);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.question-card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+.question-num-badge {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 4px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.question-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.question-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #fafafa;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: left;
+  font-size: 15px;
+  color: var(--text-dark);
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: #fff5f5;
+  transform: translateX(4px);
+}
+
+.option-btn:disabled {
+  cursor: default;
+}
+
+.option-btn.correct {
+  border-color: #27ae60;
+  background: #eafaf1;
+}
+
+.option-btn.wrong {
+  border-color: #e74c3c;
+  background: #fdecea;
+}
+
+.option-letter {
+  width: 30px;
+  height: 30px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.option-btn.correct .option-letter {
+  background: #27ae60;
+}
+
+.option-btn.wrong .option-letter {
+  background: #e74c3c;
+}
+
+.option-text {
+  flex: 1;
+}
+
+/* 答题反馈 */
+.answer-feedback {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 10px;
+  margin-top: 20px;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feedback-correct {
+  background: #eafaf1;
+  border: 1px solid #a9dfbf;
+}
+
+.feedback-wrong {
+  background: #fdecea;
+  border: 1px solid #f5b7b1;
+}
+
+.feedback-icon {
+  font-size: 28px;
+}
+
+.feedback-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.feedback-correct .feedback-title {
+  color: #196f3d;
+}
+
+.feedback-wrong .feedback-title {
+  color: #922b21;
+}
+
+.feedback-analysis {
+  font-size: 13px;
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.next-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.3s;
+}
+
+.next-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.3);
+}
+
+/* 结果页面 */
+.game-result {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.result-card {
+  background: white;
+  border-radius: 20px;
+  padding: 36px 28px;
+  box-shadow: 0 10px 40px rgba(192, 57, 43, 0.12);
+  text-align: center;
+}
+
+.result-rank-emoji {
+  font-size: 72px;
+  margin-bottom: 12px;
+}
+
+.result-title {
+  font-size: 26px;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.result-rank {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.result-score-box {
+  background: linear-gradient(135deg, #fff9f0 0%, #fff5e0 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.result-score {
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.result-max {
+  font-size: 20px;
+  color: var(--text-light);
+}
+
+.result-percent {
+  font-size: 15px;
+  color: var(--text-light);
+  margin-top: 6px;
+}
+
+.result-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 28px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-num {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--primary-dark);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* 电子证书 */
+.certificate {
+  position: relative;
+  background: linear-gradient(135deg, #fdf6e3 0%, #faf0d7 100%);
+  border-radius: 12px;
+  padding: 28px 20px;
+  margin-bottom: 24px;
+  border: 2px solid var(--gold);
+}
+
+.cert-border {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border: 1px dashed var(--gold);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.cert-content {
+  position: relative;
+  z-index: 1;
+}
+
+.cert-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+}
+
+.cert-spot {
+  font-size: 16px;
+  color: var(--primary);
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.cert-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+}
+
+.cert-spirit {
+  font-size: 14px;
+  color: var(--gold);
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.cert-footer {
+  font-size: 12px;
+  color: var(--text-light);
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  padding-top: 10px;
+}
+
+/* 答题回顾 */
+.review-section {
+  text-align: left;
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 24px;
+}
+
+.review-section h3 {
+  color: var(--primary);
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.review-item {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-q {
+  font-size: 13px;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.review-a {
+  font-size: 12px;
+}
+
+.review-correct {
+  color: #196f3d;
+}
+
+.review-wrong {
+  color: #922b21;
+}
+
+/* 结果操作按钮 */
+.result-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.result-actions .action-btn {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* 游戏响应式 */
+@media (max-width: 600px) {
+  .btn-group {
+    flex-direction: column;
+  }
+
+  .game-start-title {
+    font-size: 22px;
+  }
+
+  .question-text {
+    font-size: 16px;
+  }
+
+  .result-score {
+    font-size: 40px;
+  }
+
+  .cert-footer {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+/* ============================================================
+   🕹️ 场景小游戏样式
+   ============================================================ */
+
+.mini-game-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #6c3483 0%, #8e44ad 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 4px;
+  box-shadow: 0 4px 14px rgba(108, 52, 131, 0.35);
+}
+
+.mini-game-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 52, 131, 0.45);
+}
+
+/* 通用开始页 */
+.mini-game-start {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.mg-start-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 32px;
+  text-align: center;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(108, 52, 131, 0.12);
+  border: 3px solid #8e44ad;
+}
+
+.mg-game-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  animation: bounce 2s infinite;
+}
+
+.mg-game-title {
+  font-size: 28px;
+  color: #6c3483;
+  margin-bottom: 12px;
+  letter-spacing: 4px;
+}
+
+.mg-game-spot {
+  font-size: 18px;
+  color: var(--primary-dark);
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.mg-game-desc {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.mg-big-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #6c3483 0%, #8e44ad 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 4px;
+  box-shadow: 0 4px 14px rgba(108, 52, 131, 0.35);
+  transition: all 0.3s;
+  margin-bottom: 10px;
+}
+
+.mg-big-btn:hover {
+  transform: translateY(-2px);
+}
+
+.mg-back-btn {
+  width: 100%;
+  padding: 12px;
+  background: #f0f0f0;
+  color: var(--text-dark);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.mg-back-btn:hover {
+  background: #e0e0e0;
+}
+
+/* 通用结果页 */
+.mg-result {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.mg-result-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 32px;
+  text-align: center;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(108, 52, 131, 0.12);
+}
+
+.mg-result-emoji {
+  font-size: 72px;
+  margin-bottom: 12px;
+}
+
+.mg-result-card h2 {
+  color: #6c3483;
+  margin-bottom: 12px;
+}
+
+.mg-result-score {
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.mg-result-score span {
+  font-size: 20px;
+  color: var(--text-light);
+}
+
+.mg-result-percent {
+  font-size: 15px;
+  color: var(--text-light);
+  margin: 8px 0 16px;
+}
+
+.mg-result-msg {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+}
+
+.mg-result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 通用顶栏 */
+.mg-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+/* 决策类游戏 */
+.mg-decision {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.mg-scenario {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #8e44ad;
+}
+
+.mg-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mg-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: left;
+  font-size: 15px;
+  color: var(--text-dark);
+}
+
+.mg-option-btn:hover:not(:disabled) {
+  border-color: #8e44ad;
+  background: #f5eef8;
+  transform: translateX(4px);
+}
+
+.mg-option-btn:disabled {
+  cursor: default;
+}
+
+.mg-option-letter {
+  width: 30px;
+  height: 30px;
+  background: #8e44ad;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.mg-feedback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin-top: 12px;
+  animation: fadeIn 0.3s;
+}
+
+.mg-feedback.good {
+  background: #eafaf1;
+  border: 1px solid #a9dfbf;
+}
+
+.mg-feedback.bad {
+  background: #fdecea;
+  border: 1px solid #f5b7b1;
+}
+
+.mg-feedback-icon {
+  font-size: 24px;
+}
+
+/* 射击类游戏 */
+.mg-shoot {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.mg-shoot-field {
+  position: relative;
+  height: 360px;
+  background: linear-gradient(180deg, #5d4e37 0%, #8b7355 50%, #5d4e37 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid #3e2f1f;
+  cursor: crosshair;
+}
+
+.mg-bunker {
+  position: absolute;
+  font-size: 40px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  user-select: none;
+}
+
+.mg-bunker:hover {
+  transform: scale(1.15);
+}
+
+.mg-bunker.mg-hit {
+  animation: mg-explode 0.3s ease-out;
+}
+
+@keyframes mg-explode {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.8); opacity: 0.8; }
+  100% { transform: scale(0.5); opacity: 0; }
+}
+
+.mg-shoot-tip {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 10px;
+}
+
+/* 音符记忆游戏 */
+.mg-rhythm {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.mg-rhythm-display {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mg-rhythm-pads {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.mg-pad {
+  padding: 20px 8px;
+  background: #f0f0f0;
+  border: 3px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.mg-pad-emoji {
+  font-size: 32px;
+}
+
+.mg-pad-name {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+.mg-pad-active {
+  transform: scale(1.1);
+  background: #fff3cd;
+  border-color: #f4d03f;
+  box-shadow: 0 0 20px rgba(244, 208, 63, 0.6);
+}
+
+.mg-rhythm-tip {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 16px;
+}
+
+/* 打靶游戏 */
+.mg-target-game {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.mg-target-field {
+  position: relative;
+  height: 360px;
+  background: linear-gradient(180deg, #87ceeb 0%, #b0e0e6 60%, #228b22 60%, #2e8b57 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid #2e8b57;
+  cursor: crosshair;
+}
+
+.mg-target {
+  position: absolute;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  user-select: none;
+  transition: transform 0.1s;
+}
+
+.mg-target:hover {
+  transform: scale(1.2);
+}
+
+/* 翻牌记忆游戏 */
+.mg-memory {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.mg-memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.mg-card {
+  aspect-ratio: 3/4;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.mg-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s;
+  transform-style: preserve-3d;
+}
+
+.mg-card.mg-flipped .mg-card-inner {
+  transform: rotateY(180deg);
+}
+
+.mg-card-front, .mg-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  padding: 8px;
+}
+
+.mg-card-front {
+  background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+  color: white;
+  font-size: 28px;
+}
+
+.mg-card-back {
+  background: white;
+  color: var(--text-dark);
+  transform: rotateY(180deg);
+  border: 2px solid var(--gold);
+}
+
+.mg-card-back.desc {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* 物资运输游戏 */
+.mg-logistics {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.mg-logistics-field {
+  position: relative;
+  height: 300px;
+  background: linear-gradient(180deg, #87ceeb 0%, #87ceeb 40%, #deb887 40%, #deb887 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid #cd853f;
+}
+
+.mg-bridge {
+  position: absolute;
+  top: 42%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 24px;
+  z-index: 5;
+}
+
+.mg-truck-lane {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  height: 50px;
+}
+
+.mg-truck {
+  position: absolute;
+  top: 0;
+  font-size: 36px;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+}
+
+.mg-truck:hover {
+  transform: scale(1.15);
+}
+
+.mg-bomber-zone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+}
+
+.mg-bomb {
+  position: absolute;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 8;
+  user-select: none;
+}
+
+@keyframes mg-bomb-fall {
+  from { top: 0; }
+  to { top: 100%; }
+}
+
+/* 飘字特效 */
+.mg-float-text {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 100;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  animation: mg-float-up 1s ease-out forwards;
+}
+
+@keyframes mg-float-up {
+  0% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) translateY(-30px) scale(1.2); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-60px) scale(0.8); }
+}
+
+/* 屏幕震动 */
+@keyframes mg-shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(calc(var(--shake-intensity, 4px) * -1), var(--shake-intensity, 4px)); }
+  40% { transform: translate(var(--shake-intensity, 4px), calc(var(--shake-intensity, 4px) * -1)); }
+  60% { transform: translate(calc(var(--shake-intensity, 4px) * -1), calc(var(--shake-intensity, 4px) * -1)); }
+  80% { transform: translate(var(--shake-intensity, 4px), var(--shake-intensity, 4px)); }
+}
+
+/* 连击高亮 */
+.mg-topbar span:last-child {
+  transition: all 0.2s;
+}
+
+/* 小游戏响应式 */
+@media (max-width: 600px) {
+  .btn-group {
+    flex-direction: column;
+  }
+  .mg-rhythm-pads {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .mg-memory-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .mg-scenario {
+    font-size: 15px;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  .header,
+  .control-panel,
+  .action-buttons,
+  .footer {
+    display: none;
+  }
+
+  body {
+    background: white;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  #resultArea {
+    box-shadow: none;
+    border: none;
+  }
+
+  .character-card,
+  .act-card,
+  .level-card,
+  .clue-card {
+    break-inside: avoid;
+  }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- 顶部横幅 -->
+  <header class="header">
+    <h1>云南红旅沉浸式剧本生成器</h1>
+    <div class="subtitle">
+      <span class="star-divider">★</span>
+      挖掘红色故事 <span class="star-divider">★</span>
+      生成沉浸剧本 <span class="star-divider">★</span>
+      传承革命精神 <span class="star-divider">★</span>
+    </div>
+  </header>
+
+  <!-- 主体 -->
+  <div class="container">
+
+    <!-- 控制面板 -->
+    <div class="control-panel">
+      <h2 class="panel-title">🎯 剧本生成控制台</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="spotSelect">选择红色景区</label>
+          <select id="spotSelect">
+            <option value="">-- 请选择景区 --</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="typeSelect">剧本类型</label>
+          <select id="typeSelect">
+            <option value="自动判断">自动判断（根据景区特征推荐）</option>
+            <option value="剧本杀类">剧本杀类</option>
+            <option value="剧情演绎类">剧情演绎类</option>
+            <option value="问答闯关类">问答闯关类</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="customSpot">或输入其他景区名称（知识库未收录时将提示）</label>
+        <input type="text" id="customSpot" placeholder="例如：扎西会议旧址、西南联大旧址……">
+      </div>
+
+      <div class="btn-group">
+        <button class="generate-btn" id="generateBtn">📝 生 成 剧 本</button>
+        <button class="game-btn" id="startGameBtn">🎮 闯 关 游 戏</button>
+        <button class="mini-game-btn" id="startMiniGameBtn">🕹️ 场 景 小 游 戏</button>
+      </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="action-buttons hidden" id="actionButtons">
+      <button class="action-btn" id="copyBtn">📋 复制全文</button>
+      <button class="action-btn" id="exportMdBtn">⬇️ 导出 Markdown</button>
+      <button class="action-btn" id="printBtn">🖨️ 打印剧本</button>
+    </div>
+
+    <!-- 加载动画 -->
+    <div class="loading hidden" id="loadingArea">
+      <div class="spinner"></div>
+      <p>正在挖掘红色故事，生成沉浸式剧本……</p>
+    </div>
+
+    <!-- 结果区域 -->
+    <div id="resultArea" class="hidden"></div>
+
+    <!-- 闯关游戏区域 -->
+    <div id="gameArea" class="hidden"></div>
+
+    <!-- 场景小游戏区域 -->
+    <div id="miniGameArea" class="hidden"></div>
+
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <p>
+      <span class="star">★</span>
+      云南省职业院校技能大赛 · 人工智能赋能千行百业赛项
+      <span class="star">★</span>
+    </p>
+    <p style="margin-top:8px;">云南红旅沉浸式剧本生成器 · 让红色旅游"活"起来</p>
+  </footer>
+
+  <!-- 脚本 -->
+  <script>
+/**
+ * 云南红色文旅景区知识库
+ * 所有历史内容均依据公开党史资料整理
+ */
+
+const knowledgeBase = {
+  "扎西会议旧址": {
+    name: "扎西会议旧址",
+    location: "云南省昭通市威信县扎西镇",
+    level: "全国重点文物保护单位",
+    period: "1935年2月",
+    type: "会议旧址",
+    recommendedScript: "剧本杀类",
+    summary: "1935年2月5日至10日，中共中央政治局在威信县水田寨花房子、大河滩庄子上、扎西镇江西会馆连续召开会议，史称'扎西会议'。会议完成了常委分工，通过了《遵义会议决议》，决定放弃北渡长江、回师东进二渡赤水，对红军进行精简缩编，组建川南特委和游击纵队。扎西会议是遵义会议的继续、发展和完成，推动中国革命走向胜利新阶段。",
+    events: [
+      {
+        date: "2月5日",
+        location: "水田寨花房子",
+        title: "政治局常委会会议",
+        content: "决定常委分工：张闻天（洛甫）代替博古（秦邦宪）负总的责任，毛泽东为周恩来军事指挥上的帮助者，博古任红军总政治部代理主任。讨论中央苏区战略方针，决定成立革命军事委员会中区分会，项英任主席。"
+      },
+      {
+        date: "2月6-8日",
+        location: "大河滩庄子上",
+        title: "政治局会议",
+        content: "总结土城战役失利教训，决定放弃北渡长江计划，向扎西集中。讨论通过张闻天起草的《中共中央关于反对敌人五次'围剿'的总结决议》（即《遵义会议决议》）。决议第一次系统总结并肯定了以毛泽东为代表的正确军事路线。"
+      },
+      {
+        date: "2月9-10日",
+        location: "扎西镇江西会馆",
+        title: "政治局扩大会议",
+        content: "由张闻天主持。对中央红军进行精简缩编（除干部团外缩编为16个团），组建中共川南特委和川南游击纵队，决定回师东进、二渡赤水、重占遵义。"
+      }
+    ],
+    figures: [
+      { name: "毛泽东", role: "中共中央政治局常委、周恩来军事指挥上的帮助者", desc: "在扎西会议期间实际主导军事战略决策，提出回师东进、二渡赤水的战略方针。" },
+      { name: "周恩来", role: "中共中央政治局常委、中革军委副主席、红军总政委", desc: "实际的军事最高决策者，坚决支持毛泽东的正确军事路线。" },
+      { name: "朱德", role: "中革军委主席、红军总司令", desc: "身经百战，在遵义会议和扎西会议上坚定支持毛泽东。" },
+      { name: "张闻天（洛甫）", role: "中共中央政治局常委、党中央总负责人", desc: "接替博古负总责，起草并主持通过《遵义会议决议》。" },
+      { name: "博古（秦邦宪）", role: "中共中央政治局常委、红军总政治部代理主任", desc: "遵义会议后交出最高领导权，在扎西会议上交出文件印章。" },
+      { name: "陈云", role: "中共中央政治局常委、白区工作部部长", desc: "受委托拟定《遵义会议决议》传达提纲，准备赴各军团传达。" }
+    ],
+    layout: [
+      { name: "江西会馆（万寿宫）", desc: "扎西会议主会址，清代木结构建筑，政治局扩大会议在此召开。" },
+      { name: "湖广会馆（禹王宫）", desc: "红军总部四局驻地，清代木结构建筑。" },
+      { name: "水田寨花房子会议旧址", desc: "政治局常委会会议会址，因门窗雕刻花草虫鱼图案得名。" },
+      { name: "大河滩庄子上会议旧址", desc: "政治局会议会址，王姓乡绅住宅。" },
+      { name: "扎西红军烈士陵园", desc: "纪念在扎西牺牲的红军烈士。" },
+      { name: "扎西会议纪念馆", desc: "新建展览馆，展示扎西会议的光辉历程。" }
+    ],
+    route: "江西会馆→湖广会馆→扎西红军烈士陵园→庄子上会议旧址→水田寨花房子会议旧址",
+    elements: ["乌蒙山", "赤水河", "苗族文化", "红军标语", "风雪夜", "马灯"]
+  },
+
+  "西南联大旧址": {
+    name: "西南联大旧址",
+    location: "云南省昆明市五华区一二一大街",
+    level: "全国重点文物保护单位",
+    period: "1938-1946年",
+    type: "名人旧址/纪念馆",
+    recommendedScript: "剧情演绎类",
+    summary: "1937年抗日战争爆发后，国立北京大学、国立清华大学、私立南开大学南迁长沙，后又西迁昆明，于1938年4月正式成立国立西南联合大学。在艰苦卓绝的8年时间里，西南联大秉持'刚毅坚卓'的校训，培养了大批杰出人才，包括杨振宁、李政道、邓稼先、朱光亚等，创造了中国教育史上的奇迹，被誉为'中国教育史上的丰碑'。",
+    events: [
+      { date: "1937年11月", location: "长沙", title: "长沙临时大学成立", content: "北大、清华、南开三校南迁长沙，合并成立长沙临时大学。" },
+      { date: "1938年2月", location: "湘黔滇", title: "湘黔滇旅行团", content: "244名师生组成湘黔滇旅行团，徒步3200里，历时68天从长沙抵达昆明。" },
+      { date: "1938年4月", location: "昆明", title: "西南联大正式成立", content: "国立西南联合大学在昆明正式成立，梅贻琦任常委会主席（实际校长）。" },
+      { date: "1939年10月", location: "昆明", title: "被炸仍弦歌不辍", content: "日军轰炸昆明，联大校舍被毁，师生在废墟中坚持上课，'笳吹弦诵在山城'。" },
+      { date: "1945年12月", location: "昆明", title: "一二·一运动", content: "联大师生发起反内战、争民主的一二·一运动，四烈士牺牲。" },
+      { date: "1946年5月", location: "昆明", title: "联大结束北返", content: "抗日战争胜利，联大结束，三校北返复校。" }
+    ],
+    figures: [
+      { name: "梅贻琦", role: "联大常委会主席（实际校长）", desc: "清华大学原校长，主持联大校务8年，提出'所谓大学者，非谓有大楼之谓也，有大师之谓也'。" },
+      { name: "闻一多", role: "中文系教授", desc: "著名诗人、学者，积极参与民主运动，1946年7月15日在昆明被国民党特务暗杀。" },
+      { name: "朱自清", role: "中文系主任", desc: "著名散文家、学者，著有《背影》《荷塘月色》等，1948年拒领美国救济粮病逝。" },
+      { name: "邓稼先", role: "物理系学生", desc: "联大物理系1945届毕业生，后成为'两弹一星'元勋，中国核武器事业奠基人。" },
+      { name: "杨振宁", role: "物理系学生", desc: "联大物理系1942届毕业生，1957年获诺贝尔物理学奖。" },
+      { name: "李政道", role: "物理系学生", desc: "联大物理系学生，1957年与杨振宁同获诺贝尔物理学奖。" }
+    ],
+    layout: [
+      { name: "国立西南联合大学纪念碑", desc: "由冯友兰撰文、闻一多篆额、罗庸书丹，记载联大历史。" },
+      { name: "一二·一运动纪念馆", desc: "纪念一二·一运动中的四烈士。" },
+      { name: "闻一多先生衣冠冢", desc: "闻一多先生的衣冠冢，位于联大旧址内。" },
+      { name: "西南联大博物馆", desc: "展示联大办学历史和师生事迹。" },
+      { name: "原教室复原", desc: "铁皮顶、土墙的简陋教室复原。" }
+    ],
+    route: "西南联大纪念碑→一二·一运动纪念馆→闻一多衣冠冢→联大博物馆→原教室复原",
+    elements: ["铁皮屋顶", "油灯", "湘黔滇步行", "轰炸机", "民主运动", "刚毅坚卓"]
+  },
+
+  "滇西抗战纪念馆": {
+    name: "滇西抗战纪念馆",
+    location: "云南省保山市腾冲市",
+    level: "国家级抗战纪念设施",
+    period: "1942-1945年",
+    type: "博物馆/纪念馆",
+    recommendedScript: "问答闯关类",
+    summary: "滇西抗战纪念馆位于云南腾冲，是为纪念中国远征军在滇西抗战中的英勇事迹而建。1942年日军侵占滇西，中国远征军两次入缅作战，1944年发起滇西反攻，经过松山战役、腾冲战役等血战，于1945年1月收复滇西全部失地，打通了中印公路。滇西抗战是中国抗日战争的重要组成部分，腾冲也成为抗战中第一个被光复的县城。",
+    events: [
+      { date: "1942年2月", location: "缅甸", title: "远征军第一次入缅", content: "中国远征军10万余人入缅作战，因盟军配合失利，战败撤回，损失惨重。" },
+      { date: "1942年5月", location: "滇西", title: "日军侵占滇西", content: "日军沿缅北攻入滇西，怒江西岸大片国土沦陷，惠通桥炸毁阻敌东进。" },
+      { date: "1943年", location: "印度蓝姆伽", title: "远征军整训", content: "撤退到印度的中国军队在蓝姆伽整训，装备美械，组建中国驻印军。" },
+      { date: "1944年5月", location: "怒江", title: "滇西反攻开始", content: "中国远征军强渡怒江，发起滇西反攻战役。" },
+      { date: "1944年6-9月", location: "松山", title: "松山战役", content: "远征军围攻松山日军，历经3个多月血战，全歼守敌，打通滇缅公路咽喉。" },
+      { date: "1944年9月", location: "腾冲", title: "腾冲光复", content: "远征军攻克腾冲，全歼日军，腾冲成为抗战中第一个光复的县城。" },
+      { date: "1945年1月", location: "畹町", title: "滇西全境收复", content: "中国驻印军与远征军在畹町会师，中印公路通车，滇西抗战胜利结束。" }
+    ],
+    figures: [
+      { name: "卫立煌", role: "中国远征军司令长官", desc: "指挥滇西反攻战役，运筹帷幄，取得滇西抗战胜利。" },
+      { name: "宋希濂", role: "第11集团军总司令", desc: "参与指挥滇西反攻，率部强渡怒江。" },
+      { name: "霍揆彰", role: "第20集团军总司令", desc: "指挥腾冲战役，攻克腾冲城。" },
+      { name: "李根源", role: "国民党元老、云贵监察使", desc: "力主抗日，在滇西抗战中发挥重要作用，发表《告滇西父老书》。" },
+      { name: "张问德", role: "腾冲县抗日县长", desc: "62岁临危受命任抗日县长，坚持敌后斗争，被誉为'抗日县长'。" }
+    ],
+    layout: [
+      { name: "抗战纪念馆主馆", desc: "展示滇西抗战全过程，含大量实物、图片。" },
+      { name: "中国远征军名录墙", desc: "刻有10万余名远征军将士姓名。" },
+      { name: "国殇墓园", desc: "安葬腾冲战役阵亡将士，是全国最大的抗日阵亡将士陵园之一。" },
+      { name: "忠烈祠", desc: "供奉阵亡将士牌位。" },
+      { name: "盟军及美军展厅", desc: "展示盟军在滇西抗战中的支援。" }
+    ],
+    route: "抗战纪念馆主馆→远征军名录墙→国殇墓园→忠烈祠→盟军展厅",
+    elements: ["怒江", "惠通桥", "松山", "远征军", "美械装备", "中印公路"]
+  },
+
+  "云南陆军讲武堂": {
+    name: "云南陆军讲武堂",
+    location: "云南省昆明市五华区翠湖西路",
+    level: "全国重点文物保护单位",
+    period: "1909-1935年",
+    type: "历史旧址/军事院校",
+    recommendedScript: "剧本杀类",
+    summary: "云南陆军讲武堂创办于1909年，是中国近代史上著名的军事院校，与天津北洋讲武堂、东北奉天讲武堂并称'三大讲武堂'。讲武堂培养了大批军事人才，包括朱德、叶剑英两位元帅，以及龙云、卢汉等云南抗日将领。讲武堂师生在辛亥革命、护国战争、抗日战争中发挥了重要作用，被誉为'革命熔炉'。",
+    events: [
+      { date: "1909年9月", location: "昆明", title: "讲武堂创办", content: "云南陆军讲武堂正式开学，胡文澜任总办（后改由高尔登、李根源等）。" },
+      { date: "1911年10月", location: "昆明", title: "重九起义", content: "讲武堂师生在蔡锷、李根源领导下发动重九起义，推翻清王朝在云南的统治。" },
+      { date: "1915年12月", location: "昆明", title: "护国起义", content: "蔡锷、唐继尧等发动护国起义，讨伐袁世凯复辟帝制，讲武堂师生是主力。" },
+      { date: "1937年", location: "云南", title: "滇军抗日", desc: "", content: "讲武堂毕业生龙云、卢汉等率滇军出滇抗日，参加台儿庄战役等。" },
+      { date: "1935年", location: "昆明", title: "讲武堂停办", content: "云南陆军讲武堂正式停办，历时26年，培养学员近万人。" }
+    ],
+    figures: [
+      { name: "朱德", role: "讲武堂特别班学生", desc: "1909年考入讲武堂，后成为中国人民解放军总司令、十大元帅之首。" },
+      { name: "叶剑英", role: "讲武堂十二期学生", desc: "1917年考入讲武堂，后成为中国人民解放军十大元帅之一。" },
+      { name: "蔡锷", role: "讲武堂教官", desc: "著名军事家，领导重九起义和护国起义，'护国将军'。" },
+      { name: "李根源", role: "讲武堂总办", desc: "讲武堂主要创办者之一，辛亥元勋，后任云贵监察使支持抗战。" },
+      { name: "龙云", role: "讲武堂四期学生", desc: "后任云南省主席，抗战期间组织滇军出滇抗日、修建滇缅公路。" },
+      { name: "卢汉", role: "讲武堂四期学生", desc: "后任云南省主席，率滇军参加台儿庄战役，1949年领导云南起义。" }
+    ],
+    layout: [
+      { name: "讲武堂主楼", desc: "走马转角楼式建筑，米黄色墙体，是讲武堂的标志性建筑。" },
+      { name: "朱德、叶剑英学习复原教室", desc: "复原当年讲武堂学员上课场景。" },
+      { name: "讲武堂历史展厅", desc: "展示讲武堂26年办学历程和杰出校友。" },
+      { name: "兵器展厅", desc: "展示讲武堂时期的武器装备。" },
+      { name: "校场", desc: "讲武堂学员操练的场地。" }
+    ],
+    route: "讲武堂主楼→历史展厅→朱叶学习复原教室→兵器展厅→校场",
+    elements: ["走马转角楼", "军号", "刺刀", "操练", "革命熔炉", "护国战争"]
+  },
+
+  "聂耳故居": {
+    name: "聂耳故居",
+    location: "云南省玉溪市红塔区",
+    level: "云南省重点文物保护单位",
+    period: "1912-1935年",
+    type: "名人故居",
+    recommendedScript: "剧情演绎类",
+    summary: "聂耳（1912-1935），原名聂守信，云南玉溪人，中国著名音乐家、中华人民共和国国歌《义勇军进行曲》的作曲者。聂耳1912年出生于昆明，祖籍玉溪。他创作了《义勇军进行曲》《毕业歌》《大路歌》等大量革命歌曲，用音乐唤起民众抗日救亡。1935年7月17日，聂耳在日本藤泽市鹄沼海滨游泳时不幸溺水逝世，年仅23岁。",
+    events: [
+      { date: "1912年2月14日", location: "昆明", title: "聂耳出生", content: "聂耳出生于昆明甬道街一个中医家庭，祖籍云南玉溪。" },
+      { date: "1918年", location: "昆明", title: "父亲去世", content: "聂耳父亲聂鸿仪去世，家庭陷入贫困，母亲独自抚养子女。" },
+      { date: "1927年", location: "昆明", title: "考入省立第一师范", content: "聂耳考入云南省立第一师范学校，开始接触进步思想和音乐。" },
+      { date: "1930年", location: "上海", title: "赴上海", content: "聂耳到上海，先后在商号、歌舞学校工作，开始音乐创作。" },
+      { date: "1932年", location: "上海", title: "参加左联", content: "聂耳参加中国左翼戏剧家联盟，开始创作革命歌曲。" },
+      { date: "1935年", location: "上海", title: "创作《义勇军进行曲》", content: "聂耳为田汉的电影剧本《风云儿女》主题歌谱曲，创作《义勇军进行曲》。" },
+      { date: "1935年7月17日", location: "日本藤泽", title: "聂耳逝世", content: "聂耳在日本藤泽市鹄沼海滨游泳时不幸溺水逝世，年仅23岁。" }
+    ],
+    figures: [
+      { name: "聂耳", role: "人民音乐家", desc: "中华人民共和国国歌《义勇军进行曲》作曲者，用音乐唤起民族觉醒。" },
+      { name: "田汉", role: "剧作家、诗人", desc: "《义勇军进行曲》词作者，与聂耳合作创作大量革命歌曲。" },
+      { name: "聂鸿仪", role: "聂耳父亲", desc: "玉溪人，中医，在昆明行医，聂耳4岁时去世。" },
+      { name: "彭寂宽", role: "聂耳母亲", desc: "傣族，丈夫去世后独自抚养子女，靠行医维持生计，对聂耳影响深远。" }
+    ],
+    layout: [
+      { name: "聂耳故居（玉溪）", desc: "聂耳祖籍地，玉溪红塔区的聂耳故居，展示聂耳家世和早年生活。" },
+      { name: "聂耳故居（昆明）", desc: "聂耳出生地，昆明甬道街72号。" },
+      { name: "聂耳纪念馆", desc: "展示聂耳生平事迹和音乐成就。" },
+      { name: "聂耳音乐广场", desc: "玉溪聂耳音乐广场，有聂耳雕像。" }
+    ],
+    route: "聂耳故居→聂耳纪念馆→聂耳音乐广场",
+    elements: ["小提琴", "义勇军进行曲", "上海弄堂", "抗战烽火", "23岁青春", "民族觉醒"]
+  },
+
+  "宣威虎头山": {
+    name: "宣威虎头山",
+    location: "云南省曲靖市宣威市来宾街道",
+    level: "云南省重点文物保护单位",
+    period: "1936年3月",
+    type: "遗址公园/战役遗址",
+    recommendedScript: "问答闯关类",
+    summary: "1936年3月，红二、六军团（后组建为红二方面军）在贺龙、萧克等率领下长征进入云南宣威。3月23日，红军在宣威虎头山与尾追的滇军展开激战，重创滇军，为红军顺利通过滇东北、北上与红四方面军会师打开了通路。虎头山战斗是红二方面军长征途中的一次重要战斗，体现了红军灵活机动的战略战术和英勇顽强的战斗精神。",
+    events: [
+      { date: "1936年3月", location: "滇黔边境", title: "红二、六军团入滇", content: "红二、六军团在贺龙、任弼时、萧克等率领下，从贵州进入云南，计划经滇北北上与红四方面军会师。" },
+      { date: "1936年3月23日", location: "宣威虎头山", title: "虎头山战斗", content: "红军在宣威虎头山设伏，与尾追的滇军刘正富旅展开激战。红军英勇作战，重创滇军，取得重大胜利。" },
+      { date: "1936年3月底", location: "宣威", title: "继续北上", content: "虎头山战斗后，红军乘胜继续北上，经曲靖、马龙等地，向金沙江方向挺进。" },
+      { date: "1936年10月", location: "甘肃会宁", title: "三大主力会师", content: "红二方面军与红一、红四方面军在甘肃会宁胜利会师，长征胜利结束。" }
+    ],
+    figures: [
+      { name: "贺龙", role: "红二军团军团长", desc: "卓越的军事家、革命家，率红二方面军完成长征，后成为开国元帅。" },
+      { name: "萧克", role: "红六军团军团长", desc: "参加领导红二方面军长征，后成为开国上将。" },
+      { name: "任弼时", role: "红二方面军政委", desc: "无产阶级革命家、政治家，红二方面军的主要领导人之一。" },
+      { name: "刘正富", role: "滇军旅长", desc: "国民党滇军旅长，在虎头山战斗中被红军击败。" }
+    ],
+    layout: [
+      { name: "虎头山战斗遗址", desc: "战斗发生的核心区域，保留有战壕、掩体等遗迹。" },
+      { name: "虎头山红军烈士陵园", desc: "安葬在虎头山战斗中牺牲的红军烈士。" },
+      { name: "宣威红军长征纪念馆", desc: "展示红二方面军长征过宣威的历史。" },
+      { name: "虎头山战斗纪念碑", desc: "纪念虎头山战斗的胜利。" }
+    ],
+    route: "宣威红军长征纪念馆→虎头山战斗遗址→虎头山红军烈士陵园→战斗纪念碑",
+    elements: ["乌蒙山", "战壕", "烈士陵园", "长征", "伏击战", "北上会师"]
+  },
+
+  "松山战役遗址": {
+    name: "松山战役遗址",
+    location: "云南省保山市龙陵县腊勐镇",
+    level: "全国重点文物保护单位",
+    period: "1944年6-9月",
+    type: "遗址公园/战役遗址",
+    recommendedScript: "问答闯关类",
+    summary: "松山战役是中国远征军在滇西反攻中最惨烈的一战。1944年6月至9月，中国远征军第11集团军约2万人，对盘踞松山的日军第56师团约1200余人发动进攻。日军在松山构筑了永久性防御工事，远征军经过三个月苦战，以巨大伤亡全歼守敌，打通了滇缅公路的咽喉。松山战役是中国抗战中首次全歼日军建制联队的战役，被誉为'东方直布罗陀'之战。",
+    events: [
+      { date: "1942年5月", location: "松山", title: "日军占据松山", content: "日军侵占滇西后，在松山构筑永久性防御工事，将松山打造成控制滇缅公路的要塞。" },
+      { date: "1944年6月4日", location: "松山", title: "远征军发起进攻", content: "中国远征军第71军新编28师对松山发起第一次进攻，因日军工事坚固，进展缓慢。" },
+      { date: "1944年7月", location: "松山", title: "多次攻坚", content: "远征军多次组织进攻，逐堡逐壕争夺，伤亡惨重但逐步压缩日军阵地。" },
+      { date: "1944年8月20日", location: "松山", title: "地道爆破", content: "远征军通过挖掘地道，在日军主堡垒下埋设炸药，一举爆破日军核心阵地。" },
+      { date: "1944年9月7日", location: "松山", title: "攻克松山", content: "远征军最终攻克松山，全歼日军守备队，打通滇缅公路咽喉。" }
+    ],
+    figures: [
+      { name: "卫立煌", role: "中国远征军司令长官", desc: "指挥滇西反攻战役的最高将领，运筹帷幄。" },
+      { name: "何绍周", role: "第8军军长", desc: "松山战役后期主攻部队指挥官，率部攻克松山。" },
+      { name: "李弥", role: "第8军副军长", desc: "具体指挥松山攻坚作战。" },
+      { name: "金光惠次郎", role: "日军松山守备队长", desc: "日军第56师团步兵第113联队联队长，在松山被全歼。" }
+    ],
+    layout: [
+      { name: "松山战役遗址群", desc: "保留有日军战壕、掩体、碉堡、地道等遗迹，是保存最完整的二战遗址之一。" },
+      { name: "远征军雕塑群", desc: "大型远征军将士雕塑，纪念参战的官兵。" },
+      { name: "松山战役纪念碑", desc: "纪念松山战役中牺牲的远征军将士。" },
+      { name: "日军堡垒遗址", desc: "日军当年构筑的永备性堡垒遗迹。" },
+      { name: "远征军阵亡将士公墓", desc: "安葬松山战役中牺牲的远征军将士。" }
+    ],
+    route: "松山战役遗址群→远征军雕塑群→日军堡垒遗址→远征军阵亡将士公墓→战役纪念碑",
+    elements: ["松山", "战壕", "地堡", "远征军", "滇缅公路", "全歼日军"]
+  },
+
+  "畹町桥": {
+    name: "畹町桥",
+    location: "云南省德宏傣族景颇族自治州瑞丽市畹町镇",
+    level: "云南省重点文物保护单位",
+    period: "1938-1945年",
+    type: "行进式线路/历史桥梁",
+    recommendedScript: "问答闯关类",
+    summary: "畹町桥位于中缅边境，是滇缅公路（后为中印公路）的必经之地，也是抗战时期中国唯一的陆上国际通道。1938年滇缅公路通车后，大批援华物资经畹町桥入境，支撑了中国的抗战。1942年中国远征军从这里出境入缅作战，1945年远征军又从这里凯旋回国，并举行了中印公路通车仪式。畹町桥见证了中华民族的抗战历程，被誉为'抗战功勋桥'。",
+    events: [
+      { date: "1938年8月", location: "畹町", title: "滇缅公路通车", content: "滇缅公路全线通车，畹町桥成为中国通往缅甸的唯一陆上通道，大批援华物资由此入境。" },
+      { date: "1942年3月", location: "畹町", title: "远征军出境", content: "中国远征军第5、第6、第66军从畹町桥出境入缅作战，抗击日军。" },
+      { date: "1942年5月", location: "畹町", title: "日军占领畹町", content: "因英军溃败，远征军失利，日军攻入滇西，畹町沦陷，滇缅公路被切断。" },
+      { date: "1945年1月", location: "畹町", title: "远征军收复畹町", content: "中国远征军收复畹町，中国驻印军与远征军在畹町桥头会师。" },
+      { date: "1945年1月28日", location: "畹町", title: "中印公路通车仪式", content: "中印公路（史迪威公路）通车仪式在畹町桥头举行，卫立煌、索尔登等中美将领出席。" }
+    ],
+    figures: [
+      { name: "卫立煌", role: "中国远征军司令长官", desc: "滇西反攻最高指挥官，出席畹町会师仪式。" },
+      { name: "宋希濂", role: "第11集团军总司令", desc: "参与指挥远征军收复畹町。" },
+      { name: "索尔登", role: "美军驻中国战区指挥官", desc: "出席中印公路通车仪式，代表美军方面。" },
+      { name: "段纬", role: "云南交通厅长", desc: "主持滇缅公路云南段修建工作。" }
+    ],
+    layout: [
+      { name: "畹町桥", desc: "横跨中缅界河的历史桥梁，是滇缅公路的咽喉。" },
+      { name: "畹町桥历史纪念馆", desc: "展示畹町桥及滇缅公路的抗战历史。" },
+      { name: "远征军回国渡口遗址", desc: "远征军收复畹町后回国的登陆点。" },
+      { name: "中印公路通车纪念碑", desc: "纪念1945年中印公路通车。" },
+      { name: "畹町口岸", desc: "中缅边境口岸，可眺望缅甸境内。" }
+    ],
+    route: "畹町桥→历史纪念馆→远征军回国渡口遗址→通车纪念碑→畹町口岸",
+    elements: ["界河", "铁桥", "滇缅公路", "远征军", "援华物资", "会师"]
+  }
+};
+
+// 景区列表
+const scenicSpotList = Object.keys(knowledgeBase);
+
+</script>
+  <script>
+/**
+ * 三类剧本生成器
+ * 基于景区知识库 + 模板生成可线下执行的沉浸式体验剧本
+ */
+
+// ==================== 剧本杀类生成器 ====================
+function generateMurderMystery(spot) {
+  const events = spot.events;
+  const figures = spot.figures;
+  const layout = spot.layout;
+
+  // 选择核心事件
+  const mainEvent = events[0];
+  const secondEvent = events[1] || events[0];
+
+  // 生成角色（6-7人）
+  const characters = figures.slice(0, 5).map((f, i) => ({
+    name: f.name,
+    identity: f.role,
+    isReal: true,
+    desc: f.desc,
+    task: generateMurderCharacterTask(f, i),
+    clue: generateMurderClue(f, spot, i)
+  }));
+
+  // 添加一个虚构参谋角色
+  characters.push({
+    name: "小参谋（虚构）",
+    identity: "红军总部作战参谋",
+    isReal: false,
+    desc: "负责会议文件收发与传递，忠诚可靠，是进出会议室最频繁的人。",
+    task: "证明自己的清白，寻找失踪的关键文件。",
+    clue: "一份文件签收登记簿，其中一页被人撕走。"
+  });
+
+  // 生成线索卡
+  const clues = generateMurderClues(spot, mainEvent);
+
+  // 生成机制
+  const mechanics = generateMurderMechanics(spot);
+
+  return {
+    type: "剧本杀类",
+    name: `${spot.name.split("旧址")[0].split("纪念馆")[0].split("故居")[0]}惊雷`,
+    spot: spot.name,
+    duration: "120分钟",
+    players: `${characters.length}人`,
+    difficulty: "★★★★",
+    background: generateMurderBackground(spot, mainEvent, secondEvent),
+    venue: generateVenueLayout(spot, layout),
+    characters: characters,
+    acts: generateMurderActs(spot, mainEvent),
+    clues: clues,
+    mechanics: mechanics,
+    ending: generateMurderEnding(spot),
+    dmGuide: generateDMGuide(spot),
+    spirit: generateSpirit(spot)
+  };
+}
+
+function generateMurderCharacterTask(figure, index) {
+  const tasks = [
+    `确认关键决议草案失踪原因，确保正确路线得到贯彻。`,
+    `证明自己与文件失踪无关，找回丢失的笔记本。`,
+    `查明事件是否涉及敌特，确保军事指挥权落实。`,
+    `推动战略决策落地，找出干扰会议的因素。`,
+    `了解部队情况，核实战役失利的真实原因。`
+  ];
+  return tasks[index % tasks.length];
+}
+
+function generateMurderClue(figure, spot, index) {
+  const clues = [
+    `手中有一页决议大纲残稿，上面有修改笔迹。`,
+    `一个空的公文包，包内有撕去数页的痕迹。`,
+    `一封截获的国民党密电（需破译）。`,
+    `一张手绘的${spot.elements[0]}流域军事态势草图。`,
+    `一份部队伤亡统计报告。`,
+    `一本记满各军团干部会议安排的笔记本。`
+  ];
+  return clues[index % clues.length];
+}
+
+function generateMurderBackground(spot, event1, event2) {
+  return `1935年${spot.period}，${spot.location}。
+
+${spot.summary}
+
+就在${event1.title}召开期间，一份由张闻天起草的关键决议草案，在传达途中神秘失踪。草案内容关系到红军的军事路线和领导格局，一旦落入敌手，后果不堪设想……
+
+你们，是亲历这场会议的当事人。风雪拍打着木门，马灯摇曳。那份失踪的草案，究竟去了哪里？谁在隐瞒真相？`;
+}
+
+function generateVenueLayout(spot, layout) {
+  let result = `结合${spot.name}实景，建议分3个区域布置：\n\n`;
+  result += `1. 【主会场（议事区）】${layout[0]?.name || "主展厅"}\n   ${layout[0]?.desc || ""}\n   布置：八仙桌拼成长桌，马灯、茶壶、旧式电话机\n\n`;
+  result += `2. 【密电室（线索区）】${layout[1]?.name || "副展厅"}\n   ${layout[1]?.desc || ""}\n   布置：电报机模型、密电码本、地图\n\n`;
+  result += `3. 【宣誓区（结局区）】${layout[4]?.name || "纪念碑/广场"}\n   布置：党旗、誓词牌`;
+  return result;
+}
+
+function generateMurderClues(spot, event) {
+  return [
+    { type: "物证", content: `会馆后窗有攀爬痕迹，窗台残留一片布角。` },
+    { type: "人证", content: `文件签收登记簿缺失${event.date}那晚那一页。` },
+    { type: "书证", content: `截获的国民党密电："共匪内部路线分歧，速寻机会获取决议草案"（需破译）。` },
+    { type: "物证", content: `一份文件草稿上的修改笔迹。` },
+    { type: "人证", content: `当晚8点半，有人看到一个人影从后窗翻出。` },
+    { type: "物证", content: `会馆外发现一只被遗弃的草鞋，鞋底沾有红土。` },
+    { type: "书证", content: `残稿背面有一行小字："为防万一，另抄一份藏于……"` },
+    { type: "物证", content: `军事态势草图，标注"敌情不明"字样。` },
+    { type: "人证", content: `笔记本上记着"${event.date} ${event.title}通过决议"。` },
+    { type: "书证", content: `部队伤亡统计报告，显示战役减员严重。` },
+    { type: "物证", content: `一个公文包的锁有被撬动的痕迹，但包内是空的。` },
+    { type: "人证", content: `警卫员证词：当晚曾听到会议室有低声争吵。` },
+    { type: "书证", content: `完整破译的国民党密电：敌军已得知红军集结，正调集兵力合围。` },
+    { type: "物证", content: `草图背面写着"东渡赤水，重占遵义"的字样。` },
+    { type: "人证", content: `炊事员证词：深夜看到一人提着马灯匆匆走向后院。` }
+  ];
+}
+
+function generateMurderMechanics(spot) {
+  return [
+    {
+      name: "密电破译",
+      desc: "玩家使用密电码本（简易替换密码）破译截获的国民党电报，破译成功可获得敌军动向的关键情报。"
+    },
+    {
+      name: "路线抉择投票",
+      desc: `第三幕末进行战略方向投票：A.继续北渡长江 B.回师东进 C.在川滇黔边境创建苏区。投票结果影响结局走向，让玩家体验历史抉择的重量感。`
+    },
+    {
+      name: "文件签收簿还原",
+      desc: "缺失的登记簿页面需要玩家通过其他线索拼凑，还原后可确认文件传递链条。"
+    }
+  ];
+}
+
+function generateMurderActs(spot, event) {
+  return [
+    {
+      title: "第一幕：风雪夜归人（破冰·身份介绍）",
+      duration: "约20分钟",
+      content: `场景：${spot.layout[0]?.name || "主会场"}，马灯昏黄，屋外风雪呼啸。\n\nDM开场："${event.date}深夜，${event.location}。${event.title}刚结束，各位正准备休息。突然，作战参谋冲进会议室，脸色煞白——'不好了！关键决议草案不见了！'"\n\n流程：\n1. 每位玩家按角色依次作自我介绍\n2. DM发放角色剧本和专属线索卡\n3. 第一轮自由交谈（10分钟），建立人物关系`
+    },
+    {
+      title: "第二幕：密室疑云（线索搜集·第一轮推理）",
+      duration: "约30分钟",
+      content: `场景：转场至密电室，玩家在此搜集线索。\n\n流程：\n1. DM发放第一批公共线索卡（8张）\n2. 玩家轮流抽取并分享\n3. 第一轮圆桌讨论，每人提出1个怀疑对象\n4. 互动机制：密电破译\n\n焦点问题：谁有机会接触决议？谁有动机藏匿或销毁决议？`
+    },
+    {
+      title: "第三幕：惊雷乍现（核心事件还原）",
+      duration: "约35分钟",
+      content: `场景：回到主会场，召开紧急会议。\n\n流程：\n1. DM发放第二批公共线索卡（7张）\n2. 第二轮圆桌讨论，回答三个核心问题：\n   ① 草案到底是谁拿走的？\n   ② 红军下一步该往哪里走？\n   ③ 如何处理军事路线的分歧？\n3. 互动机制：路线抉择投票\n\n真相伏笔：草案其实是负责人主动藏起来的，是为防万一的保护措施。这个"失踪"是虚惊一场，但借此暴露了各方对军事路线的态度分歧。`
+    },
+    {
+      title: "第四幕：拨云见日（结局抉择·精神升华）",
+      duration: "约35分钟",
+      content: `场景：转场至宣誓区。\n\n流程：\n1. DM公布真相，指出真正的危机不是文件丢失，而是红军生死存亡的路线抉择\n2. 历史回放：宣读真实历史结论\n3. 结局分支（根据投票结果）：\n   - 若选择回师东进 → 历史正确结局，讲述后续胜利\n   - 若选择其他 → 假设性反思后回归真实历史\n4. 升华仪式：面向纪念碑集体宣誓`
+    }
+  ];
+}
+
+function generateMurderEnding(spot) {
+  return `【真相揭晓】
+
+关键决议草案其实是会议负责人为防止意外而主动藏起来的副本。真正的危机不是文件丢失，而是红军面临的生死抉择。
+
+【历史结论】
+
+${spot.summary}
+
+【结局升华】
+
+无论玩家在游戏中做出何种选择，历史已经给出了答案。正是因为${spot.name.split("旧址")[0].split("纪念馆")[0]}的那次会议，红军才找到了正确的方向，中国革命才一步步走向胜利。`;
+}
+
+function generateDMGuide(spot) {
+  return `【时间控制】
+- 第一幕：20分钟（10分钟时提醒开始讨论）
+- 第二幕：30分钟（20分钟时提醒进入紧急会议）
+- 第三幕：35分钟（25分钟时提醒准备投票）
+- 第四幕：35分钟
+
+【关键话术】
+- 开场：营造紧张氛围，强调"风雪夜""失踪"的悬念感
+- 第二幕引导："各位，决议草案关系到红军的生死存亡，请务必慎重推理。"
+- 第三幕转折："同志们，当务之急不是追查谁拿了文件，而是决定红军往哪里走！"
+- 第四幕升华：语调转为庄重肃穆，引导玩家从"玩游戏"切换到"学历史"
+
+【注意事项】
+- 若玩家推理偏离史实太远，DM可通过"新截获的情报"温和引导
+- 结局仪式环节务必严肃，保持对革命先烈的敬意
+- 全程不得戏谑革命历史人物`;
+}
+
+function generateSpirit(spot) {
+  const spirits = [
+    { name: "实事求是", desc: `通过${spot.events[0]?.title || "历史事件"}的反思，体现敢于承认错误、修正路线的勇气。` },
+    { name: "坚定信念", desc: "在重兵围堵、缺衣少粮的绝境中，依然坚持革命理想。" },
+    { name: "民主集中", desc: "会议上的激烈争论与最终统一，体现党内民主决策。" },
+    { name: "顾全大局", desc: "领导权的平稳交接，体现个人服从革命大局的胸怀。" },
+    { name: "依靠群众", desc: "红军扩红、组建游击队，体现军民鱼水情。" }
+  ];
+  return spirits;
+}
+
+// ==================== 剧情演绎类生成器 ====================
+function generateDramaScript(spot) {
+  const events = spot.events;
+  const figures = spot.figures;
+
+  // 选取主演角色
+  const mainCast = figures.slice(0, 4).map(f => ({
+    name: f.name,
+    identity: f.role,
+    desc: f.desc,
+    lines: "多",
+    isReal: true
+  }));
+
+  // 群众角色
+  const supportingCast = figures.slice(4).map(f => ({
+    name: f.name,
+    identity: f.role,
+    desc: f.desc,
+    lines: "中",
+    isReal: true
+  }));
+
+  supportingCast.push({
+    name: "青年学生/战士（虚构）",
+    identity: "进步青年",
+    desc: "代表那个时代的热血青年，串联剧情。",
+    lines: "中",
+    isReal: false
+  });
+
+  // 分场剧本
+  const scenes = generateDramaScenes(spot, events, figures);
+
+  return {
+    type: "剧情演绎类",
+    name: `${spot.name.split("旧址")[0].split("纪念馆")[0].split("故居")[0]}风云`,
+    spot: spot.name,
+    duration: "90分钟",
+    players: `${mainCast.length + supportingCast.length + 5}人`,
+    difficulty: "★★★",
+    background: generateDramaBackground(spot),
+    venue: generateDramaVenue(spot),
+    cast: { main: mainCast, supporting: supportingCast },
+    scenes: scenes,
+    interactions: generateDramaInteractions(spot),
+    props: generateDramaProps(spot),
+    crew: generateDramaCrew(),
+    spirit: generateSpirit(spot)
+  };
+}
+
+function generateDramaBackground(spot) {
+  return `${spot.summary}\n\n本剧以${spot.name}的真实历史为蓝本，通过艺术化的舞台呈现，让体验者走进那段峥嵘岁月，感受革命先辈的理想信念与家国情怀。`;
+}
+
+function generateDramaVenue(spot) {
+  let result = `结合${spot.name}实景，建议分以下演出区域：\n\n`;
+  spot.layout.slice(0, 4).forEach((l, i) => {
+    result += `${i + 1}. 【${l.name}】\n   ${l.desc}\n   演出用途：${["开场区", "主舞台", "互动区", "结局区"][i] || "演出区"}\n\n`;
+  });
+  return result;
+}
+
+function generateDramaScenes(spot, events, figures) {
+  const scenes = [];
+  const sceneCount = Math.min(events.length, 5);
+
+  for (let i = 0; i < sceneCount; i++) {
+    const event = events[i];
+    const figure = figures[i % figures.length];
+    scenes.push({
+      title: `第${i + 1}场：${event.title}`,
+      location: event.location,
+      venue: spot.layout[i % spot.layout.length].name,
+      characters: [figure.name, "旁白", (figures[(i + 1) % figures.length])?.name].filter(Boolean),
+      content: generateSceneContent(spot, event, figure, i),
+      stageDirections: `[${spot.elements[i % spot.elements.length]}的背景下，${figure.name}神情${["坚毅", "悲愤", "激昂", "沉思", "坚定"][i % 5]}]`,
+      audio: `音效：${["风声", "炮火声", "脚步声", "音乐起", "静默"][i % 5]}`
+    });
+  }
+
+  return scenes;
+}
+
+function generateSceneContent(spot, event, figure, index) {
+  const dialogues = [
+    `${figure.name}：\n"同志们，${event.title}的时刻到了。我们面临的是生与死的考验，但我们的信念绝不能动摇！"\n\n旁白：\n${event.content}\n\n${figure.name}：\n"跟我走，我们一定能找到出路！"`,
+
+    `${figure.name}：\n"看看我们的队伍，看看这些年轻的面孔。他们为什么来？为了一个新中国！"\n\n旁白：\n${event.content}\n\n${figure.name}：\n"我已经做好了准备，哪怕牺牲，也要把火种传下去。"`,
+
+    `${figure.name}：\n"历史会记住今天。我们在这里做出的决定，将影响整个中国的命运。"\n\n旁白：\n${event.content}\n\n${figure.name}：\n"实事求是，这是我们唯一的出路。"`,
+
+    `${figure.name}：\n"百姓们在看着我们，他们把希望寄托在我们身上。我们不能让他们失望！"\n\n旁白：\n${event.content}\n\n${figure.name}：\n"为了新中国，前进！"`,
+
+    `${figure.name}：\n"八年了，我们终于等到了这一天。但这不是结束，而是新的开始。"\n\n旁白：\n${event.content}\n\n${figure.name}：\n"我们要把这种精神传承下去，让下一代知道，今天的幸福来之不易。"`
+  ];
+  return dialogues[index % dialogues.length];
+}
+
+function generateDramaInteractions(spot) {
+  return [
+    {
+      trigger: "关键决策节点",
+      type: "投票抉择",
+      desc: `在剧情关键决策处，暂停演出，让观众投票决定角色的下一步行动，然后公布历史真实选择并对比。`
+    },
+    {
+      trigger: "情感高潮处",
+      type: "角色代入发言",
+      desc: `邀请1-2位观众代入角色，说出如果自己是${spot.figures[0]?.name}，此刻会想什么、做什么。`
+    },
+    {
+      trigger: "结局",
+      type: "集体仪式",
+      desc: `全体演员和观众面向${spot.layout[spot.layout.length - 1]?.name || "纪念碑"}，集体朗诵红色诗词或宣誓。`
+    }
+  ];
+}
+
+function generateDramaProps(spot) {
+  return [
+    `服装：符合${spot.period}年代的中山装、军装、学生装（可网购低成本同款）`,
+    `道具：${spot.elements.slice(0, 3).join("、")}相关的简易道具`,
+    `灯光：暖色马灯/台灯营造年代感`,
+    `音效：配合剧情的背景音效（风声、脚步声等）`,
+    `化妆：简洁为主，突出角色特征`
+  ];
+}
+
+function generateDramaCrew() {
+  return [
+    "导演 1 人：统筹全场演出",
+    "旁白 1 人：串场解说",
+    "主演 4 人：核心历史人物",
+    "配角 3-5 人：其他角色和群众",
+    "道具/音效 1 人：负责道具和音效",
+    "DM/主持人 1 人：引导互动环节"
+  ];
+}
+
+// ==================== 问答闯关类生成器（9段式规范） ====================
+function generateQuizAdventure(spot) {
+  const events = spot.events;
+  const figures = spot.figures;
+  const layout = spot.layout;
+  const stationCount = Math.min(layout.length, 8);
+
+  // 生成各站点
+  const stations = layout.slice(0, stationCount).map((place, idx) => {
+    const event = events[idx % events.length];
+    const figure = figures[idx % figures.length];
+    return generateStation(place, event, figure, spot, idx, stationCount);
+  });
+
+  return {
+    type: "问答闯关类",
+    name: `${spot.name}探路行动`,
+    spot: spot.name,
+    duration: "约120分钟",
+    players: "不限（建议4-8人/队）",
+    difficulty: "★★★",
+    // 段落0：一句话定位
+    positioning: generatePositioning(spot),
+    // 段落1：地点判断与玩法选择
+    gameplaySelection: generateGameplaySelection(spot),
+    // 段落2：关卡地图
+    levelMap: generateLevelMap9(spot, stations),
+    // 段落3+4：分站题库 + 实物任务
+    stations: stations,
+    // 段落5：积分与评奖
+    scoring: generateScoring9(stationCount),
+    // 段落6：装备包清单
+    equipmentPack: generateEquipmentPack9(),
+    // 段落7：终局仪式
+    endingCeremony: generateEndingCeremony9(spot),
+    // 段落8：落地待办
+    todos: generateTodos(spot),
+    spirit: generateSpirit(spot)
+  };
+}
+
+// 段落0：一句话定位
+function generatePositioning(spot) {
+  const gameplayName = "红色探路·实景闯关";
+  const emotionalPoints = {
+    "扎西会议旧址": "在风雪会议旧址中体悟'实事求是'的转折之力",
+    "西南联大旧址": "在铁皮顶教室下感受'刚毅坚卓'的弦歌不辍",
+    "滇西抗战纪念馆": "在远征军名录墙前铭刻'共赴国难'的民族壮歌",
+    "云南陆军讲武堂": "在走马转角楼内点燃'革命熔炉'的青春热血",
+    "聂耳故居": "在义勇军进行曲旋律中唤醒'民族觉醒'的赤子之心",
+    "宣威虎头山": "在乌蒙山战壕间重走'北上会师'的长征壮途",
+    "松山战役遗址": "在松山焦土上铭记'一寸山河一寸血'的抗战史诗",
+    "畹町桥": "在界河铁桥上致敬'生命线'上的援华壮举"
+  };
+  const ep = emotionalPoints[spot.name] || "在红色足迹中感悟革命精神的永恒力量";
+  return `【${gameplayName}】——${ep}。`;
+}
+
+// 段落1：地点判断与玩法选择
+function generateGameplaySelection(spot) {
+  const type = spot.type;
+  const isMuseum = type.includes("纪念馆") || type.includes("博物馆");
+  const isRoute = type.includes("行进") || type.includes("线路");
+  const isSite = type.includes("遗址") || type.includes("公园");
+
+  const main = {
+    type: "主玩法",
+    name: "知识闯关答题",
+    reason: isMuseum
+      ? `${spot.name}为展陈型场馆，史料密集、展品丰富，答题玩法可高效覆盖知识点，让参与者在观展中主动检索信息。`
+      : isRoute
+        ? `${spot.name}为行进式线路，点位分散，答题配合动线可自然串联各站点，避免行进过程松散。`
+        : `${spot.name}为遗址型场地，实物遗存是核心，答题可引导参与者从实物中提取历史信息，加深记忆。`
+  };
+
+  const aux1 = {
+    type: "辅玩法①",
+    name: "实物打卡任务",
+    reason: `针对${spot.name}点位分散的特点，实物任务让参与者"动起来"，通过寻找、拍照、绘制等动手环节增强现场沉浸感，弥补纯答题的单一感。`
+  };
+
+  const aux2 = {
+    type: "辅玩法②",
+    name: "积分排行竞赛",
+    reason: `多人/多队参与时，积分排行制造良性竞争，提升参与积极性；同时排行榜在终局仪式公布，形成完整的情绪闭环。`
+  };
+
+  const ending = {
+    type: "终局玩法",
+    name: "致敬宣誓仪式",
+    reason: `${spot.name}承载厚重历史，终局仪式通过默哀、宣誓、颁奖等环节将游戏情绪收束到庄重的红色精神传承上，避免游戏化消解历史严肃性。`
+  };
+
+  return [main, aux1, aux2, ending];
+}
+
+// 段落2：关卡地图（5-8站）
+function generateLevelMap9(spot, stations) {
+  return {
+    route: spot.route,
+    totalDistance: `${(stations.length * 0.3).toFixed(1)}公里`,
+    totalDuration: `${stations.length * 12}分钟`,
+    stations: stations.map((s, i) => ({
+      order: i + 1,
+      name: s.name,
+      location: s.location,
+      narrative: s.narrative,
+      gameplay: s.gameplay,
+      condition: s.condition,
+      points: s.points,
+      duration: s.duration
+    }))
+  };
+}
+
+// 生成单个站点（含关卡地图信息 + 题库 + 实物任务）
+function generateStation(place, event, figure, spot, idx, total) {
+  const isFirst = idx === 0;
+  const isLast = idx === total - 1;
+
+  return {
+    order: idx + 1,
+    name: place.name,
+    location: place.name,
+    narrative: isFirst
+      ? `起点情报站：了解${spot.name}的整体历史背景，领取探路任务。`
+      : isLast
+        ? `终点集结地：完成最终挑战，准备终局仪式。`
+        : `中段挑战点：围绕"${event.title}"展开知识与实物双重挑战。`,
+    gameplay: isFirst ? "知识答题 + 任务领取" : isLast ? "终极答题 + 积分汇总" : "知识答题 + 实物任务",
+    condition: "答对2/3题并完成实物任务即可通关盖章",
+    points: 75,
+    duration: "约12分钟",
+    desc: place.desc,
+    knowledge: event.title,
+    // 段落3：分站题库（2-3题）
+    questions: generateStationQuestions(spot, event, figure, idx),
+    // 段落4：实物任务
+    physicalTask: generatePhysicalTask9(spot, idx, place)
+  };
+}
+
+// 段落3：分站题库（含标准答案、解析、史料来源、核验状态）
+function generateStationQuestions(spot, event, figure, idx) {
+  return [
+    {
+      level: "基础题",
+      type: "单选题",
+      question: `${spot.name}的核心历史事件发生在什么时期？`,
+      options: shuffleArray([spot.period, "1934-1936年", "1937-1945年", "1946-1949年"].filter((v, i, a) => a.indexOf(v) === i)).slice(0, 4),
+      answer: spot.period,
+      analysis: `${spot.name}的历史发生于${spot.period}。${spot.summary.substring(0, 50)}……`,
+      source: `${spot.name}官方展陈资料/党史文献`,
+      verified: "已核验"
+    },
+    {
+      level: "进阶题",
+      type: "单选题",
+      question: `关于"${event.title}"，下列描述正确的是？`,
+      options: shuffleArray([
+        event.content.substring(0, 35) + "……",
+        "该事件与本景区历史无关",
+        "该事件发生在和平时期",
+        "该事件为民间传说故事"
+      ]),
+      answer: event.content.substring(0, 35) + "……",
+      analysis: `${event.date}，${event.title}。${event.content}`,
+      source: `${spot.name}展陈说明牌`,
+      verified: "已核验"
+    },
+    {
+      level: "挑战题",
+      type: "简答题",
+      question: `请简述${figure.name}在${spot.name}历史中的角色与贡献。`,
+      answer: `${figure.name}，${figure.role}。${figure.desc}`,
+      analysis: `${figure.name}是${spot.name}历史中的重要人物。${figure.desc}`,
+      source: `${spot.name}人物介绍展陈`,
+      verified: "已核验"
+    }
+  ];
+}
+
+// 段落4：实物任务（含描述、物料、验证方式、分值、安全提示）
+function generatePhysicalTask9(spot, idx, place) {
+  const tasks = [
+    {
+      name: "战地寻踪",
+      desc: `在${place.name}范围内，寻找与"${spot.elements[idx % spot.elements.length]}"相关的实物或展陈，拍照记录并在探路卡上简要说明其历史意义。`,
+      materials: "探路卡、手机/相机",
+      verification: "主持人查验照片与说明文字是否对应、是否准确",
+      points: 20,
+      safety: "注意展厅内禁止使用闪光灯；勿触碰文物"
+    },
+    {
+      name: "情报破译",
+      desc: `在${place.name}展陈中找到一个关键年份或数字，将其作为密码填入探路卡，作为后续关卡的通关密钥。`,
+      materials: "探路卡、签字笔",
+      verification: "主持人核对密码是否与展陈一致",
+      points: 15,
+      safety: "勿在展柜上涂写；保持展厅安静"
+    },
+    {
+      name: "足迹还原",
+      desc: `根据${place.name}的展陈内容，用3分钟在探路卡上画出此处的历史场景简图（须含人物、地点、事件三要素）。`,
+      materials: "探路卡、签字笔、彩笔",
+      verification: "主持人检查简图是否包含三要素且符合史实",
+      points: 20,
+      safety: "画笔勿乱涂乱画，仅限探路卡上"
+    },
+    {
+      name: "口述历史",
+      desc: `由队长向队员口述${place.name}的历史背景（不少于100字），记录员记录要点，通信员向主持人复述确认。`,
+      materials: "探路卡、签字笔",
+      verification: "主持人根据复述内容与史实比对评分",
+      points: 15,
+      safety: "控制音量，避免影响其他参观者"
+    },
+    {
+      name: "物证收集",
+      desc: `在${place.name}寻找一件最具代表性的实物或图片，用一句话概括其"为什么在这里"的历史理由。`,
+      materials: "探路卡、手机",
+      verification: "主持人判断理由是否合理、是否贴合展陈",
+      points: 20,
+      safety: "拍照禁用闪光灯；勿越过护栏"
+    }
+  ];
+  return tasks[idx % tasks.length];
+}
+
+// 段落5：积分与评奖（基础分+加分+扣分+四档评奖+排行榜口径）
+function generateScoring9(stationCount) {
+  const perStation = 75; // 每关知识题60 + 实物任务15
+  const total = perStation * stationCount;
+  const pass = Math.round(total * 0.6);
+  const gold = Math.round(total * 0.85);
+  const silver = Math.round(total * 0.7);
+  const bronze = pass;
+
+  return {
+    base: `每关知识题60分（基础10+进阶20+挑战30）+ 实物任务15分 = 75分/关`,
+    total: `满分${total}分（${stationCount}关 × 75分）`,
+    bonus: "①全部关卡知识题全对 +30分；②全程无超时 +20分；③实物任务获主持人优秀评价 +10分/关",
+    penalty: "①单关超时扣10分；②实物任务未完成扣该关15分；③答错不扣分（挑战题答错扣5分）",
+    awards: [
+      { tier: "金奖", condition: `≥${gold}分且排名前20%`, prize: "金奖证书 + 红色文创纪念品" },
+      { tier: "银奖", condition: `≥${silver}分`, prize: "银奖证书 + 纪念徽章" },
+      { tier: "铜奖", condition: `≥${bronze}分`, prize: "铜奖证书 + 纪念贴纸" },
+      { tier: "参与奖", condition: `<${bronze}分但完成全程`, prize: "参与证书 + 探路护照纪念章" }
+    ],
+    ranking: `按总分降序排名；同分情况下，实物任务完成度高者优先；排行榜在终局仪式统一公布并张贴。`
+  };
+}
+
+// 段落6：装备包清单（按类别列，含数量、单价、小计、必备/选配）
+function generateEquipmentPack9() {
+  return [
+    {
+      category: "身份装备",
+      items: [
+        { name: "探路者臂章", quantity: "1个/人", unitPrice: "2元", subtotal: "按人数计", required: "必备" },
+        { name: "队伍编号牌", quantity: "1块/队", unitPrice: "5元", subtotal: "按队数计", required: "必备" },
+        { name: "探路护照", quantity: "1本/人", unitPrice: "3元", subtotal: "按人数计", required: "必备" }
+      ]
+    },
+    {
+      category: "记录装备",
+      items: [
+        { name: "探路笔记本", quantity: "1本/人", unitPrice: "2元", subtotal: "按人数计", required: "必备" },
+        { name: "签字笔", quantity: "2支/队", unitPrice: "1元", subtotal: "按队数计", required: "必备" },
+        { name: "便携夹板", quantity: "1个/队", unitPrice: "3元", subtotal: "按队数计", required: "选配" }
+      ]
+    },
+    {
+      category: "任务装备",
+      items: [
+        { name: "关卡地图", quantity: "1份/队", unitPrice: "1元", subtotal: "按队数计", required: "必备" },
+        { name: "密电码本", quantity: "1本/队", unitPrice: "1元", subtotal: "按队数计", required: "选配" },
+        { name: "计时器", quantity: "1个/队", unitPrice: "10元", subtotal: "按队数计", required: "必备" }
+      ]
+    },
+    {
+      category: "打卡装备",
+      items: [
+        { name: "打卡印章", quantity: "8枚（各站1枚）", unitPrice: "15元", subtotal: "120元", required: "必备" },
+        { name: "通关证书", quantity: "按需", unitPrice: "2元", subtotal: "按人数计", required: "必备" },
+        { name: "金/银/铜奖章", quantity: "按需", unitPrice: "8元", subtotal: "按需", required: "必备" }
+      ]
+    },
+    {
+      category: "应急装备",
+      items: [
+        { name: "对讲机", quantity: "2台/队", unitPrice: "租赁30元/天", subtotal: "按队数计", required: "选配" },
+        { name: "急救包", quantity: "1个/队", unitPrice: "25元", subtotal: "按队数计", required: "必备" },
+        { name: "饮用水", quantity: "若干", unitPrice: "2元", subtotal: "按需", required: "必备" }
+      ]
+    }
+  ];
+}
+
+// 段落7：终局仪式（5环节分钟级流程 + 主持话术要点 + 物料）
+function generateEndingCeremony9(spot) {
+  const endPoint = spot.layout[spot.layout.length - 1]?.name || "终点集结区";
+  return {
+    location: endPoint,
+    totalDuration: "约20分钟",
+    stages: [
+      { order: 1, name: "集结整队", duration: "3分钟", content: `所有探路队在${endPoint}集结，通信员向主持人汇报各队总分，工作人员统计排行榜。` },
+      { order: 2, name: "颁奖公布", duration: "5分钟", content: "主持人公布积分排行榜与金/银/铜奖名单，颁发证书与奖章。" },
+      { order: 3, name: "历史回望", duration: "4分钟", content: "每队派1名代表分享本次路线上印象最深的历史瞬间（1分钟/队）。" },
+      { order: 4, name: "默哀致敬", duration: "3分钟", content: `全体面向${endPoint}的纪念标志，集体默哀30秒，向革命先烈致敬。` },
+      { order: 5, name: "宣誓合影", duration: "5分钟", content: "由主持人领读红色传承誓词，全体跟读；随后集体合影留念，活动结束。" }
+    ],
+    hostScript: `各位探路者，今天我们沿着${spot.route}完成了红色探路之旅。无论得分高低，你们都用脚步丈量了历史，用心灵感受了精神。现在，请全体起立，面向${endPoint}，让我们共同缅怀革命先烈，传承红色基因……`,
+    materials: "通关证书、金/银/铜奖章、誓词卡、合影背景板、音响（播放背景音乐）"
+  };
+}
+
+// 段落8：落地待办（列出所有待补项与假设）
+function generateTodos(spot) {
+  return [
+    `【待补】${spot.name}各站点的实际步行距离与预计耗时，需现场踏勘后精确填写。`,
+    `【待补】分站题库中部分题目的选项需根据${spot.name}实际展陈内容做最终校准。`,
+    `【待补】实物任务中的"拍照"环节，需确认${spot.name}是否允许拍摄（部分展陈可能禁止）。`,
+    `【待补】装备包清单的单价为估算值，需根据实际采购渠道更新。`,
+    `【待补】终局仪式的宣誓誓词可根据主办方要求调整。`,
+    `【假设】参与人数按每队4-8人、共4-8队设计；若人数变化需调整物资数量。`,
+    `【假设】${spot.name}开放时间内允许开展团队活动，需提前与场馆方沟通确认。`
+  ];
+}
+
+// 数组打乱工具
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ==================== 类型自动判断 ====================
+function detectScriptType(spot, userRequest) {
+  const request = userRequest || "";
+
+  // 用户明确指定类型
+  if (request.includes("剧本杀") || request.includes("推理")) return "剧本杀类";
+  if (request.includes("剧情") || request.includes("演绎") || request.includes("舞台剧") || request.includes("表演")) return "剧情演绎类";
+  if (request.includes("问答") || request.includes("闯关") || request.includes("答题") || request.includes("打卡")) return "问答闯关类";
+
+  // 根据景区类型自动判断
+  return spot.recommendedScript;
+}
+
+// ==================== 主生成入口 ====================
+function generateScript(spotName, scriptType, userRequest) {
+  const spot = knowledgeBase[spotName];
+  if (!spot) {
+    return {
+      error: true,
+      message: `知识库中暂未收录"${spotName}"的史料，请选择其他景区或补充资料。`
+    };
+  }
+
+  const type = scriptType === "自动判断" ? detectScriptType(spot, userRequest) : scriptType;
+
+  let script;
+  switch (type) {
+    case "剧本杀类":
+      script = generateMurderMystery(spot);
+      break;
+    case "剧情演绎类":
+      script = generateDramaScript(spot);
+      break;
+    case "问答闯关类":
+      script = generateQuizAdventure(spot);
+      break;
+    default:
+      script = generateMurderMystery(spot);
+  }
+
+  return {
+    error: false,
+    type: type,
+    spot: spot,
+    script: script,
+    generatedAt: new Date().toLocaleString("zh-CN")
+  };
+}
+
+</script>
+  <script>
+/**
+ * 云南红旅沉浸式剧本生成器 - 主应用
+ */
+
+// DOM 元素
+const spotSelect = document.getElementById("spotSelect");
+const typeSelect = document.getElementById("typeSelect");
+const customSpotInput = document.getElementById("customSpot");
+const generateBtn = document.getElementById("generateBtn");
+const resultArea = document.getElementById("resultArea");
+const loadingArea = document.getElementById("loadingArea");
+const actionButtons = document.getElementById("actionButtons");
+const exportMdBtn = document.getElementById("exportMdBtn");
+const printBtn = document.getElementById("printBtn");
+const copyBtn = document.getElementById("copyBtn");
+
+// 初始化景区下拉
+function initSpotSelect() {
+  scenicSpotList.forEach(name => {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    spotSelect.appendChild(opt);
+  });
+}
+
+// 生成剧本
+function handleGenerate() {
+  const spotName = spotSelect.value || customSpotInput.value.trim();
+  const scriptType = typeSelect.value;
+  const userRequest = `${spotName} ${scriptType}`;
+
+  if (!spotName) {
+    alert("请选择或输入景区名称！");
+    return;
+  }
+
+  // 显示加载
+  resultArea.classList.add("hidden");
+  loadingArea.classList.remove("hidden");
+  actionButtons.classList.add("hidden");
+
+  // 模拟生成延迟（提升体验感）
+  setTimeout(() => {
+    const result = generateScript(spotName, scriptType, userRequest);
+    loadingArea.classList.add("hidden");
+
+    if (result.error) {
+      resultArea.innerHTML = `
+        <div class="error-box">
+          <h3>⚠️ 提示</h3>
+          <p>${result.message}</p>
+          <p style="margin-top:12px;font-size:14px;color:#666;">当前已收录景区：${scenicSpotList.join("、")}</p>
+        </div>
+      `;
+      resultArea.classList.remove("hidden");
+      return;
+    }
+
+    // 渲染剧本
+    renderScript(result);
+    resultArea.classList.remove("hidden");
+    actionButtons.classList.remove("hidden");
+  }, 1500);
+}
+
+// 渲染剧本
+function renderScript(result) {
+  const { script, type } = result;
+  let html = "";
+
+  // 基本信息
+  html += `
+    <div class="script-header">
+      <div class="script-title">《${script.name}》</div>
+      <div class="script-meta">
+        <span class="tag">${script.type}</span>
+        <span class="meta-item">📍 ${script.spot}</span>
+        <span class="meta-item">⏱ ${script.duration}</span>
+        <span class="meta-item">👥 ${script.players}</span>
+        <span class="meta-item">🎯 ${script.difficulty}</span>
+      </div>
+      <div class="generated-at">生成时间：${result.generatedAt}</div>
+    </div>
+  `;
+
+  // 历史背景
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">📜</span> 历史背景</h2>
+      <div class="section-content">${formatText(script.background)}</div>
+    </div>
+  `;
+
+  // 场地布置
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🏛</span> 场地布置建议</h2>
+      <div class="section-content">${formatText(script.venue)}</div>
+    </div>
+  `;
+
+  // 根据类型渲染不同内容
+  if (type === "剧本杀类") {
+    html += renderMurderMystery(script);
+  } else if (type === "剧情演绎类") {
+    html += renderDramaScript(script);
+  } else if (type === "问答闯关类") {
+    html += renderQuizAdventure(script);
+  }
+
+  // 红色精神点题
+  html += `
+    <div class="script-section spirit-section">
+      <h2 class="section-title"><span class="title-icon">⭐</span> 红色精神点题</h2>
+      <div class="spirit-grid">
+        ${script.spirit.map(s => `
+          <div class="spirit-card">
+            <div class="spirit-name">${s.name}</div>
+            <div class="spirit-desc">${s.desc}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  resultArea.innerHTML = html;
+}
+
+// 渲染剧本杀
+function renderMurderMystery(script) {
+  let html = "";
+
+  // 角色设定
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🎭</span> 角色设定（${script.characters.length}人）</h2>
+      <div class="character-grid">
+        ${script.characters.map((c, i) => `
+          <div class="character-card">
+            <div class="char-avatar">${c.name.charAt(0)}</div>
+            <div class="char-info">
+              <div class="char-name">${c.name} ${!c.isReal ? '<span class="fiction-tag">虚构</span>' : '<span class="real-tag">史实</span>'}</div>
+              <div class="char-identity">${c.identity}</div>
+              <div class="char-desc">${c.desc}</div>
+              <div class="char-task"><strong>🎯 个人任务：</strong>${c.task}</div>
+              <div class="char-clue"><strong>🔍 专属线索：</strong>${c.clue}</div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  // 剧本分幕
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">📖</span> 剧本分幕</h2>
+      ${script.acts.map(act => `
+        <div class="act-card">
+          <div class="act-title">${act.title} <span class="act-duration">${act.duration}</span></div>
+          <div class="act-content">${formatText(act.content)}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  // 线索卡
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🗝</span> 线索卡设计（共${script.clues.length}张）</h2>
+      <div class="clue-grid">
+        ${script.clues.map((c, i) => `
+          <div class="clue-card">
+            <div class="clue-num">#${String(i + 1).padStart(2, "0")}</div>
+            <div class="clue-type">${c.type}</div>
+            <div class="clue-content">${c.content}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  // 机制设计
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">⚙️</span> 机制设计</h2>
+      ${script.mechanics.map(m => `
+        <div class="mechanism-card">
+          <div class="mech-name">${m.name}</div>
+          <div class="mech-desc">${m.desc}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  // 结局
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🌅</span> 结局设计</h2>
+      <div class="section-content">${formatText(script.ending)}</div>
+    </div>
+  `;
+
+  // DM手册
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🎬</span> DM主持人手册</h2>
+      <div class="section-content">${formatText(script.dmGuide)}</div>
+    </div>
+  `;
+
+  return html;
+}
+
+// 渲染剧情演绎
+function renderDramaScript(script) {
+  let html = "";
+
+  // 角色阵容
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🎭</span> 角色阵容</h2>
+      <h3 style="color:#c0392b;margin:12px 0 8px;">主演角色</h3>
+      <div class="character-grid">
+        ${script.cast.main.map(c => `
+          <div class="character-card">
+            <div class="char-avatar">${c.name.charAt(0)}</div>
+            <div class="char-info">
+              <div class="char-name">${c.name}</div>
+              <div class="char-identity">${c.identity}</div>
+              <div class="char-desc">${c.desc}</div>
+              <div class="char-task"><strong>台词量：</strong>${c.lines}</div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+      <h3 style="color:#c0392b;margin:16px 0 8px;">配角/群众角色</h3>
+      <div class="character-grid">
+        ${script.cast.supporting.map(c => `
+          <div class="character-card">
+            <div class="char-avatar">${c.name.charAt(0)}</div>
+            <div class="char-info">
+              <div class="char-name">${c.name} ${!c.isReal ? '<span class="fiction-tag">虚构</span>' : ''}</div>
+              <div class="char-identity">${c.identity}</div>
+              <div class="char-desc">${c.desc}</div>
+              <div class="char-task"><strong>台词量：</strong>${c.lines}</div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  // 分场剧本
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🎬</span> 分场剧本</h2>
+      ${script.scenes.map((s, i) => `
+        <div class="act-card">
+          <div class="act-title">${s.title}</div>
+          <div class="scene-meta">
+            <span>📍 ${s.venue}</span>
+            <span>👥 ${s.characters.join("、")}</span>
+          </div>
+          <div class="stage-direction">${s.stageDirections}</div>
+          <div class="scene-content">${formatText(s.content)}</div>
+          <div class="scene-audio">${s.audio}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  // 互动节点
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🤝</span> 互动节点设计</h2>
+      ${script.interactions.map(it => `
+        <div class="mechanism-card">
+          <div class="mech-name">触发点：${it.trigger}（${it.type}）</div>
+          <div class="mech-desc">${it.desc}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  // 服化道
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">👔</span> 服化道建议</h2>
+      <ul class="props-list">
+        ${script.props.map(p => `<li>${p}</li>`).join("")}
+      </ul>
+    </div>
+  `;
+
+  // 演职人员
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">👥</span> 演职人员表</h2>
+      <ul class="props-list">
+        ${script.crew.map(c => `<li>${c}</li>`).join("")}
+      </ul>
+    </div>
+  `;
+
+  return html;
+}
+
+// 渲染问答闯关（9段式规范）
+function renderQuizAdventure(script) {
+  let html = "";
+
+  // 段落0：一句话定位
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">📍</span> 段落0 · 一句话定位</h2>
+      <div class="positioning-box">
+        ${script.positioning}
+      </div>
+    </div>
+  `;
+
+  // 段落1：地点判断与玩法选择
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🎯</span> 段落1 · 地点判断与玩法选择</h2>
+      ${script.gameplaySelection.map(g => `
+        <div class="gameplay-card">
+          <div class="gameplay-type">${g.type}</div>
+          <div class="gameplay-name">${g.name}</div>
+          <div class="gameplay-reason"><strong>选择理由：</strong>${g.reason}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  // 段落2：关卡地图
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🗺</span> 段落2 · 关卡地图</h2>
+      <div class="level-map-box">
+        <div class="map-route"><strong>行进路线：</strong>${script.levelMap.route}</div>
+        <div class="map-distance">总行程：${script.levelMap.totalDistance} | 预计耗时：${script.levelMap.totalDuration}</div>
+        <table class="map-table">
+          <thead>
+            <tr><th>站序</th><th>站点名称</th><th>叙事主题</th><th>玩法</th><th>通关条件</th><th>分值</th><th>时长</th></tr>
+          </thead>
+          <tbody>
+            ${script.levelMap.stations.map(s => `
+              <tr>
+                <td>${s.order}</td>
+                <td><strong>${s.name}</strong></td>
+                <td>${s.narrative}</td>
+                <td>${s.gameplay}</td>
+                <td>${s.condition}</td>
+                <td>${s.points}分</td>
+                <td>${s.duration}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  // 段落3+4：分站题库 + 实物任务
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">📚</span> 段落3 · 分站题库 + 段落4 · 实物任务</h2>
+      ${script.stations.map(st => `
+        <div class="level-card">
+          <div class="level-header">
+            <span class="level-num">第${st.order}站</span>
+            <span class="level-name">${st.name}</span>
+          </div>
+          <div class="level-location">📍 ${st.location}</div>
+          <div class="level-knowledge">📖 知识点：${st.knowledge}</div>
+
+          <!-- 段落3：分站题库 -->
+          <div class="station-questions">
+            ${st.questions.map(q => `
+              <div class="question-block ${q.level === '挑战题' ? 'challenge' : ''}">
+                <div class="q-level">${q.level}（${q.type}）</div>
+                <div class="q-text">${q.question}</div>
+                ${q.options ? `
+                  <div class="q-options">
+                    ${q.options.map((o, oi) => `<div class="q-option">${String.fromCharCode(65 + oi)}. ${o}</div>`).join("")}
+                  </div>
+                ` : ''}
+                <div class="q-answer"><strong>✅ 标准答案：</strong>${q.answer}</div>
+                <div class="q-analysis"><strong>📖 解析：</strong>${q.analysis}</div>
+                <div class="q-meta"><span>📚 史料来源：${q.source}</span> <span class="verified-badge">${q.verified}</span></div>
+              </div>
+            `).join("")}
+          </div>
+
+          <!-- 段落4：实物任务 -->
+          <div class="physical-task">
+            <div class="task-header">🧩 实物任务：${st.physicalTask.name}（${st.physicalTask.points}分）</div>
+            <div class="task-desc">${st.physicalTask.desc}</div>
+            <div class="task-detail-grid">
+              <div><strong>📦 物料：</strong>${st.physicalTask.materials}</div>
+              <div><strong>✅ 验证方式：</strong>${st.physicalTask.verification}</div>
+              <div><strong>⚠️ 安全提示：</strong>${st.physicalTask.safety}</div>
+            </div>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  // 段落5：积分与评奖
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🏆</span> 段落5 · 积分与评奖</h2>
+      <div class="scoring-grid">
+        <div class="scoring-item"><span class="scoring-label">基础分</span><span>${script.scoring.base}</span></div>
+        <div class="scoring-item"><span class="scoring-label">满分</span><span>${script.scoring.total}</span></div>
+        <div class="scoring-item"><span class="scoring-label">加分项</span><span>${script.scoring.bonus}</span></div>
+        <div class="scoring-item"><span class="scoring-label">扣分项</span><span>${script.scoring.penalty}</span></div>
+        <div class="scoring-item full-width"><span class="scoring-label">排行榜口径</span><span>${script.scoring.ranking}</span></div>
+      </div>
+      <h3 style="color:var(--primary);margin:16px 0 10px;">四档评奖</h3>
+      <div class="awards-grid">
+        ${script.scoring.awards.map(a => `
+          <div class="award-card">
+            <div class="award-tier">${a.tier}</div>
+            <div class="award-condition">${a.condition}</div>
+            <div class="award-prize">${a.prize}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  // 段落6：装备包清单
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🎒</span> 段落6 · 装备包清单</h2>
+      ${script.equipmentPack.map(cat => `
+        <div class="equipment-category">
+          <div class="equip-cat-name">${cat.category}</div>
+          <table class="equip-table">
+            <thead>
+              <tr><th>物品</th><th>数量</th><th>单价</th><th>小计</th><th>必备/选配</th></tr>
+            </thead>
+            <tbody>
+              ${cat.items.map(it => `
+                <tr>
+                  <td>${it.name}</td>
+                  <td>${it.quantity}</td>
+                  <td>${it.unitPrice}</td>
+                  <td>${it.subtotal}</td>
+                  <td><span class="equip-required ${it.required === '必备' ? 'req' : 'opt'}">${it.required}</span></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  // 段落7：终局仪式
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">🌅</span> 段落7 · 终局仪式</h2>
+      <div class="ending-box">
+        <div class="ending-meta"><strong>地点：</strong>${script.endingCeremony.location} | <strong>总时长：</strong>${script.endingCeremony.totalDuration}</div>
+        <h4>5环节分钟级流程：</h4>
+        <div class="ending-stages">
+          ${script.endingCeremony.stages.map(s => `
+            <div class="ending-stage">
+              <div class="stage-order">${s.order}</div>
+              <div class="stage-info">
+                <div class="stage-name">${s.name} <span class="stage-duration">${s.duration}</span></div>
+                <div class="stage-content">${s.content}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+        <div class="host-script-box">
+          <strong>🎤 主持话术要点：</strong>
+          <div class="host-script">${script.endingCeremony.hostScript}</div>
+        </div>
+        <div class="ending-materials"><strong>📦 仪式物料：</strong>${script.endingCeremony.materials}</div>
+      </div>
+    </div>
+  `;
+
+  // 段落8：落地待办
+  html += `
+    <div class="script-section">
+      <h2 class="section-title"><span class="title-icon">📋</span> 段落8 · 落地待办</h2>
+      <div class="todos-box">
+        ${script.todos.map(t => `<div class="todo-item">${t}</div>`).join("")}
+      </div>
+    </div>
+  `;
+
+  return html;
+}
+
+// 工具函数：格式化文本
+function formatText(text) {
+  if (!text) return "";
+  return text
+    .split("\n")
+    .map(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return "<br>";
+      // 标题行
+      if (/^[一二三四五六七八九十]+[、.]/.test(trimmed)) {
+        return `<div class="sub-title">${trimmed}</div>`;
+      }
+      // 列表项
+      if (/^[-•]/.test(trimmed)) {
+        return `<div class="list-item">${trimmed.replace(/^[-•]\s*/, "")}</div>`;
+      }
+      return `<div>${trimmed}</div>`;
+    })
+    .join("");
+}
+
+// 导出为Markdown
+function exportMarkdown() {
+  const text = resultArea.innerText;
+  const title = document.querySelector(".script-title")?.textContent || "红旅剧本";
+  const blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${title}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// 复制到剪贴板
+function copyToClipboard() {
+  const text = resultArea.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const original = copyBtn.textContent;
+    copyBtn.textContent = "✅ 已复制！";
+    setTimeout(() => { copyBtn.textContent = original; }, 2000);
+  }).catch(() => {
+    alert("复制失败，请手动选择文本复制。");
+  });
+}
+
+// 打印
+function printScript() {
+  window.print();
+}
+
+// ============================================================
+// 🎮 闯关游戏引擎
+// ============================================================
+
+const startGameBtn = document.getElementById("startGameBtn");
+const gameArea = document.getElementById("gameArea");
+
+// 游戏状态
+let gameState = {
+  spot: null,
+  questions: [],
+  currentIndex: 0,
+  score: 0,
+  correctCount: 0,
+  answers: [],
+  startTime: null
+};
+
+// 根据景区生成闯关题目
+function generateGameQuestions(spot) {
+  const questions = [];
+  const events = spot.events;
+  const figures = spot.figures;
+  const layout = spot.layout;
+
+  // 题库1：景区基本信息
+  questions.push({
+    q: `${spot.name}位于云南省哪个州市？`,
+    options: generateOptions(spot.location.split("省")[1]?.split("市")[0]?.split("州")[0]?.trim() || "昭通", ["昆明", "大理", "丽江", "昭通", "玉溪", "保山", "曲靖", "红河"]),
+    answer: spot.location,
+    analysis: `${spot.name}位于${spot.location}，是${spot.level}。`
+  });
+
+  // 题库2：历史时期
+  questions.push({
+    q: `${spot.name}的核心历史事件发生在什么时期？`,
+    options: generateOptions(spot.period, ["1935年2月", "1937-1945年", "1942-1945年", "1909-1935年", "1912-1935年"]),
+    answer: spot.period,
+    analysis: `${spot.name}的历史可追溯至${spot.period}。`
+  });
+
+  // 题库3：核心事件（来自events）
+  events.slice(0, 4).forEach(evt => {
+    const wrongOptions = events.filter(e => e.title !== evt.title).map(e => e.title);
+    questions.push({
+      q: `${evt.date}，在${evt.location}发生的历史事件是？`,
+      options: generateOptions(evt.title, [...wrongOptions, "以上都不是", "遵义会议", "长征出发", "秋收起义"]),
+      answer: evt.title,
+      analysis: `${evt.date}，${evt.title}。${evt.content.substring(0, 80)}……`
+    });
+  });
+
+  // 题库4：重要人物
+  figures.slice(0, 3).forEach(fig => {
+    questions.push({
+      q: `在${spot.name}的历史中，${fig.name}的身份是？`,
+      options: generateOptions(fig.role, figures.filter(f => f.name !== fig.name).map(f => f.role)),
+      answer: fig.role,
+      analysis: `${fig.name}，${fig.role}。${fig.desc.substring(0, 60)}`
+    });
+  });
+
+  // 题库5：景区布局
+  if (layout.length > 0) {
+    questions.push({
+      q: `以下哪一项是${spot.name}的组成部分？`,
+      options: generateOptions(layout[0].name, layout.slice(1).map(l => l.name).concat(["天安门广场", "故宫博物院", "西湖"])),
+      answer: layout[0].name,
+      analysis: `${layout[0].name}是${spot.name}的重要组成部分。${layout[0].desc}`
+    });
+  }
+
+  // 题库6：特色元素
+  if (spot.elements.length > 0) {
+    questions.push({
+      q: `${spot.name}的特色历史元素不包括以下哪一项？`,
+      options: generateOptions("兵马俑", [...spot.elements, "红军标语", "赤水河"]),
+      answer: "兵马俑",
+      analysis: `${spot.name}的特色元素包括：${spot.elements.join("、")}。兵马俑是西安秦始皇陵的文物。`
+    });
+  }
+
+  // 打乱题目顺序，取前10题
+  return shuffleArray(questions).slice(0, Math.min(10, questions.length));
+}
+
+// 生成选项（正确答案 + 干扰项，共4个）
+function generateOptions(correctAnswer, wrongPool) {
+  const wrongs = shuffleArray(wrongPool.filter(w => w && w !== correctAnswer)).slice(0, 3);
+  const all = shuffleArray([correctAnswer, ...wrongs]);
+  return all;
+}
+
+// 数组打乱
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// 开始闯关游戏
+function handleStartGame() {
+  const spotName = spotSelect.value || customSpotInput.value.trim();
+
+  if (!spotName) {
+    alert("请先选择或输入景区名称！");
+    return;
+  }
+
+  const spot = knowledgeBase[spotName];
+  if (!spot) {
+    alert(`知识库中暂未收录"${spotName}"，请选择已收录的景区：\n${scenicSpotList.join("、")}`);
+    return;
+  }
+
+  // 初始化游戏状态
+  gameState = {
+    spot: spot,
+    questions: generateGameQuestions(spot),
+    currentIndex: 0,
+    score: 0,
+    correctCount: 0,
+    answers: [],
+    startTime: Date.now()
+  };
+
+  // 隐藏其他区域，显示游戏
+  resultArea.classList.add("hidden");
+  actionButtons.classList.add("hidden");
+  loadingArea.classList.add("hidden");
+  gameArea.classList.remove("hidden");
+
+  renderGameStart();
+}
+
+// 渲染游戏开始页
+function renderGameStart() {
+  const spot = gameState.spot;
+  gameArea.innerHTML = `
+    <div class="game-start">
+      <div class="game-start-card">
+        <div class="game-start-icon">🎯</div>
+        <h2 class="game-start-title">红色探秘闯关</h2>
+        <div class="game-start-spot">📍 ${spot.name}</div>
+        <div class="game-start-desc">${spot.summary.substring(0, 100)}……</div>
+        <div class="game-start-info">
+          <div class="info-item">
+            <div class="info-num">${gameState.questions.length}</div>
+            <div class="info-label">道题目</div>
+          </div>
+          <div class="info-item">
+            <div class="info-num">10</div>
+            <div class="info-label">分/题</div>
+          </div>
+          <div class="info-item">
+            <div class="info-num">${gameState.questions.length * 10}</div>
+            <div class="info-label">满分</div>
+          </div>
+        </div>
+        <div class="game-start-tip">
+          💡 每道题答完会立即显示答案解析，答错也能学到知识哦！
+        </div>
+        <button class="game-big-btn" onclick="renderGameQuestion()">🚩 开始闯关</button>
+      </div>
+    </div>
+  `;
+  gameArea.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// 渲染题目
+function renderGameQuestion() {
+  const state = gameState;
+  const q = state.questions[state.currentIndex];
+  const total = state.questions.length;
+  const progress = ((state.currentIndex) / total) * 100;
+
+  gameArea.innerHTML = `
+    <div class="game-question">
+      <!-- 顶部状态栏 -->
+      <div class="game-topbar">
+        <div class="game-spot-name">📍 ${state.spot.name}</div>
+        <div class="game-score">得分：<span class="score-num">${state.score}</span></div>
+      </div>
+
+      <!-- 进度条 -->
+      <div class="game-progress-bar">
+        <div class="game-progress-fill" style="width: ${progress}%"></div>
+      </div>
+      <div class="game-progress-text">第 ${state.currentIndex + 1} / ${total} 题</div>
+
+      <!-- 题目卡片 -->
+      <div class="question-card">
+        <div class="question-num-badge">Q${state.currentIndex + 1}</div>
+        <div class="question-text">${q.q}</div>
+        <div class="question-options" id="questionOptions">
+          ${q.options.map((opt, i) => `
+            <button class="option-btn" data-idx="${i}" onclick="handleAnswer(${i})">
+              <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+              <span class="option-text">${opt}</span>
+            </button>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+  gameArea.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// 处理答题
+function handleAnswer(idx) {
+  const state = gameState;
+  const q = state.questions[state.currentIndex];
+  const selected = q.options[idx];
+  const isCorrect = selected === q.answer;
+
+  if (isCorrect) {
+    state.score += 10;
+    state.correctCount++;
+  }
+  state.answers.push({ question: q.q, selected, correct: q.answer, isCorrect });
+
+  // 显示反馈
+  const options = document.querySelectorAll(".option-btn");
+  options.forEach((btn, i) => {
+    btn.disabled = true;
+    btn.classList.remove("correct", "wrong");
+    if (q.options[i] === q.answer) {
+      btn.classList.add("correct");
+    } else if (i === idx) {
+      btn.classList.add("wrong");
+    }
+  });
+
+  // 显示解析
+  const feedback = document.createElement("div");
+  feedback.className = `answer-feedback ${isCorrect ? "feedback-correct" : "feedback-wrong"}`;
+  feedback.innerHTML = `
+    <div class="feedback-icon">${isCorrect ? "✅" : "❌"}</div>
+    <div class="feedback-content">
+      <div class="feedback-title">${isCorrect ? "回答正确！" : "回答错误"}</div>
+      <div class="feedback-analysis">${q.analysis}</div>
+    </div>
+  `;
+  document.querySelector(".question-card").appendChild(feedback);
+
+  // 添加下一题按钮
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "next-btn";
+  const isLast = state.currentIndex === state.questions.length - 1;
+  nextBtn.textContent = isLast ? "🏆 查看结果" : "➡️ 下一题";
+  nextBtn.onclick = () => {
+    if (isLast) {
+      renderGameResult();
+    } else {
+      state.currentIndex++;
+      renderGameQuestion();
+    }
+  };
+  document.querySelector(".question-card").appendChild(nextBtn);
+}
+
+// 渲染游戏结果
+function renderGameResult() {
+  const state = gameState;
+  const total = state.questions.length;
+  const score = state.score;
+  const maxScore = total * 10;
+  const percent = Math.round((score / maxScore) * 100);
+  const duration = Math.round((Date.now() - state.startTime) / 1000);
+  const minutes = Math.floor(duration / 60);
+  const seconds = duration % 60;
+
+  // 评级
+  let rank, rankColor, rankEmoji;
+  if (percent >= 90) {
+    rank = "红色达人"; rankColor = "#d4af37"; rankEmoji = "🏅";
+  } else if (percent >= 70) {
+    rank = "红色先锋"; rankColor = "#e67e22"; rankEmoji = "🥈";
+  } else if (percent >= 50) {
+    rank = "红色战士"; rankColor = "#e74c3c"; rankEmoji = "🥉";
+  } else {
+    rank = "红色学徒"; rankColor = "#95a5a6"; rankEmoji = "📖";
+  }
+
+  gameArea.innerHTML = `
+    <div class="game-result">
+      <!-- 结果卡片 -->
+      <div class="result-card">
+        <div class="result-rank-emoji">${rankEmoji}</div>
+        <h2 class="result-title">闯关完成！</h2>
+        <div class="result-rank" style="color:${rankColor}">${rank}</div>
+
+        <div class="result-score-box">
+          <div class="result-score">${score}<span class="result-max">/${maxScore}</span></div>
+          <div class="result-percent">正确率 ${percent}%</div>
+        </div>
+
+        <div class="result-stats">
+          <div class="stat-item">
+            <div class="stat-num">${state.correctCount}</div>
+            <div class="stat-label">答对题数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">${total - state.correctCount}</div>
+            <div class="stat-label">答错题数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">${minutes}分${seconds}秒</div>
+            <div class="stat-label">用时</div>
+          </div>
+        </div>
+
+        <!-- 电子证书 -->
+        <div class="certificate">
+          <div class="cert-border"></div>
+          <div class="cert-content">
+            <div class="cert-title">🏆 红色探秘者证书 🏆</div>
+            <div class="cert-spot">${state.spot.name}</div>
+            <div class="cert-text">
+              恭喜您完成「${state.spot.name}」红色探秘闯关，<br>
+              正确回答 ${state.correctCount} / ${total} 题，得分 ${score} 分，<br>
+              荣获「<span style="color:${rankColor}">${rank}</span>」称号！
+            </div>
+            <div class="cert-spirit">${getRandomSpirit()}</div>
+            <div class="cert-footer">
+              <div>云南红旅沉浸式剧本生成器</div>
+              <div>${new Date().toLocaleDateString("zh-CN")}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 答题回顾 -->
+        <div class="review-section">
+          <h3>📋 答题回顾</h3>
+          ${state.answers.map((a, i) => `
+            <div class="review-item">
+              <div class="review-q">${i + 1}. ${a.question}</div>
+              <div class="review-a ${a.isCorrect ? "review-correct" : "review-wrong"}">
+                ${a.isCorrect ? "✅" : "❌"} 你的答案：${a.selected}
+                ${!a.isCorrect ? ` | 正确答案：${a.correct}` : ""}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="result-actions">
+          <button class="action-btn" onclick="handleStartGame()">🔄 再玩一次</button>
+          <button class="action-btn" onclick="backToHome()">🏠 返回首页</button>
+          <button class="action-btn" onclick="window.print()">🖨️ 打印证书</button>
+        </div>
+      </div>
+    </div>
+  `;
+  gameArea.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// 随机红色精神
+function getRandomSpirit() {
+  const spirits = [
+    "🌟 坚定信念，实事求是，走好新时代的长征路！",
+    "🌟 传承红色基因，赓续革命精神！",
+    "🌟 不忘初心，牢记使命，砥砺前行！",
+    "🌟 缅怀革命先烈，珍惜幸福生活！"
+  ];
+  return spirits[Math.floor(Math.random() * spirits.length)];
+}
+
+// 返回首页
+function backToHome() {
+  gameArea.classList.add("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// 事件绑定
+generateBtn.addEventListener("click", handleGenerate);
+startGameBtn.addEventListener("click", handleStartGame);
+exportMdBtn.addEventListener("click", exportMarkdown);
+printBtn.addEventListener("click", printScript);
+copyBtn.addEventListener("click", copyToClipboard);
+
+// ============================================================
+// 🕹️ 场景小游戏引擎（每个景区一个专属动感小游戏）
+// ============================================================
+
+const startMiniGameBtn = document.getElementById("startMiniGameBtn");
+const miniGameArea = document.getElementById("miniGameArea");
+
+// 景区 → 游戏类型 映射
+const spotGameMap = {
+  "扎西会议旧址": "decision",
+  "松山战役遗址": "shoot",
+  "聂耳故居": "rhythm",
+  "云南陆军讲武堂": "target",
+  "西南联大旧址": "memory",
+  "宣威虎头山": "route",
+  "畹町桥": "logistics",
+  "滇西抗战纪念馆": "memory"
+};
+
+const gameMeta = {
+  decision: { name: "会议决策风云", icon: "⚖️", desc: "在扎西会议的关键节点做出抉择，你的决定将影响红军的命运走向。" },
+  shoot: { name: "攻克松山", icon: "💥", desc: "远征军战士！点击消灭日军碉堡，用有限的弹药拿下松山阵地。" },
+  rhythm: { name: "音符记忆", icon: "🎵", desc: "聆听义勇军进行曲的音符序列，按正确顺序复现，唤醒民族觉醒之声。" },
+  target: { name: "军事打靶训练", icon: "🎯", desc: "讲武堂学员！限时内击中尽可能多的移动靶标，锤炼过硬军事素质。" },
+  memory: { name: "红色记忆翻牌", icon: "🃏", desc: "翻转卡片，将历史人物与他们的事迹正确配对，传承红色记忆。" },
+  route: { name: "长征行军路线", icon: "🗺️", desc: "红军指挥员！选择正确的行军路线，避开敌军围追堵截，胜利北上。" },
+  logistics: { name: "生命线运输", icon: "🚚", desc: "抗战生命线！调度物资车队安全通过畹町桥，为前线输送补给。" }
+};
+
+// 小游戏状态
+let miniGame = { type: null, spot: null, state: {}, timer: null };
+
+// ==================== 音效系统（Web Audio API，无需音频文件） ====================
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch (e) { return null; }
+  }
+  return audioCtx;
+}
+
+function playSound(type) {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  switch (type) {
+    case "hit":
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(200, now + 0.1);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+      osc.start(now); osc.stop(now + 0.1);
+      break;
+    case "shoot":
+      osc.type = "square";
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.exponentialRampToValueAtTime(50, now + 0.08);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+      osc.start(now); osc.stop(now + 0.08);
+      break;
+    case "combo":
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.15);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+      osc.start(now); osc.stop(now + 0.15);
+      break;
+    case "correct":
+      osc.frequency.setValueAtTime(523, now);
+      osc.frequency.setValueAtTime(659, now + 0.1);
+      osc.frequency.setValueAtTime(784, now + 0.2);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+      break;
+    case "wrong":
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(200, now);
+      osc.frequency.exponentialRampToValueAtTime(80, now + 0.3);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+      break;
+    case "win":
+      const notes = [523, 659, 784, 1047];
+      notes.forEach((f, i) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = f;
+        g.gain.setValueAtTime(0.15, now + i * 0.12);
+        g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.12 + 0.2);
+        o.start(now + i * 0.12); o.stop(now + i * 0.12 + 0.2);
+      });
+      break;
+    case "click":
+      osc.frequency.setValueAtTime(1000, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+      osc.start(now); osc.stop(now + 0.05);
+      break;
+  }
+}
+
+// 飘字特效（在指定元素上方显示浮动文字）
+function floatText(parent, text, color) {
+  const el = document.createElement("div");
+  el.className = "mg-float-text";
+  el.textContent = text;
+  el.style.color = color || "#ffd700";
+  el.style.left = "50%";
+  el.style.top = "30%";
+  parent.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
+
+// 屏幕震动
+function screenShake(container, intensity) {
+  container.style.animation = "none";
+  container.offsetHeight;
+  container.style.animation = `mg-shake ${0.3}s`;
+  container.style.setProperty("--shake-intensity", intensity + "px");
+}
+
+// 入口：开始场景小游戏
+function handleStartMiniGame() {
+  const spotName = spotSelect.value || customSpotInput.value.trim();
+  if (!spotName) { alert("请先选择或输入景区名称！"); return; }
+  const spot = knowledgeBase[spotName];
+  if (!spot) { alert(`知识库中暂未收录"${spotName}"，请选择已收录景区。`); return; }
+
+  const type = spotGameMap[spotName] || "memory";
+  const meta = gameMeta[type];
+
+  miniGame = { type, spot, state: {}, timer: null };
+  resultArea.classList.add("hidden");
+  gameArea.classList.add("hidden");
+  actionButtons.classList.add("hidden");
+  loadingArea.classList.add("hidden");
+  miniGameArea.classList.remove("hidden");
+
+  miniGameArea.innerHTML = `
+    <div class="mini-game-start">
+      <div class="mg-start-card">
+        <div class="mg-game-icon">${meta.icon}</div>
+        <h2 class="mg-game-title">${meta.name}</h2>
+        <div class="mg-game-spot">📍 ${spot.name}</div>
+        <p class="mg-game-desc">${meta.desc}</p>
+        <button class="mg-big-btn" onclick="launchMiniGame()">🚀 开始游戏</button>
+        <button class="mg-back-btn" onclick="closeMiniGame()">返回</button>
+      </div>
+    </div>
+  `;
+  miniGameArea.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function closeMiniGame() {
+  if (miniGame.timer) { clearInterval(miniGame.timer); miniGame.timer = null; }
+  miniGameArea.classList.add("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// 分发到对应游戏
+function launchMiniGame() {
+  switch (miniGame.type) {
+    case "decision": initDecisionGame(); break;
+    case "shoot": initShootGame(); break;
+    case "rhythm": initRhythmGame(); break;
+    case "target": initTargetGame(); break;
+    case "memory": initMemoryGame(); break;
+    case "route": initRouteGame(); break;
+    case "logistics": initLogisticsGame(); break;
+    default: initMemoryGame();
+  }
+}
+
+// 通用结果页
+function showMiniGameResult(score, maxScore, title, message, emoji) {
+  playSound("win");
+  const percent = Math.round((score / maxScore) * 100);
+  miniGameArea.innerHTML = `
+    <div class="mg-result">
+      <div class="mg-result-card">
+        <div class="mg-result-emoji">${emoji}</div>
+        <h2>${title}</h2>
+        <div class="mg-result-score">${score}<span>/${maxScore}</span></div>
+        <div class="mg-result-percent">得分率 ${percent}%</div>
+        <p class="mg-result-msg">${message}</p>
+        <div class="mg-result-actions">
+          <button class="mg-big-btn" onclick="launchMiniGame()">🔄 再玩一次</button>
+          <button class="mg-back-btn" onclick="closeMiniGame()">🏠 返回首页</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ==================== 游戏1：扎西会议决策风云 ====================
+function initDecisionGame() {
+  const spot = miniGame.spot;
+  const scenarios = [
+    {
+      q: "土城战役失利，国民党重兵沿江布防，北渡长江计划受阻。此时你主张？",
+      options: [
+        { text: "强行北渡长江，与红四方面军会师", result: "bad", reason: "敌军已设重兵，强渡将招致重大损失。" },
+        { text: "转向扎西集结，待机而动", result: "good", reason: "正确！扎西会议决定放弃北渡，转向扎西休整。" }
+      ]
+    },
+    {
+      q: "遵义会议后，党内军事路线仍有分歧。你认为应该？",
+      options: [
+        { text: "继续坚持'左'倾冒险主义军事路线", result: "bad", reason: "错误路线已导致第五次反围剿失败。" },
+        { text: "确立毛泽东同志的军事指挥地位", result: "good", reason: "正确！扎西会议完成了遵义会议的组织调整。" }
+      ]
+    },
+    {
+      q: "红军在扎西期间，面对敌众我寡的态势，你主张？",
+      options: [
+        { text: "集中兵力与敌决战", result: "bad", reason: "敌强我弱，决战不利。" },
+        { text: "精简缩编，回师东进二渡赤水", result: "good", reason: "正确！扎西会议决定精简部队，机动作战。" }
+      ]
+    },
+    {
+      q: "为坚持敌后斗争，你建议？",
+      options: [
+        { text: "全军集中行动，不留后手", result: "bad", reason: "缺乏敌后牵制，主力易被围追。" },
+        { text: "组建川南特委和游击纵队，坚持敌后", result: "good", reason: "正确！扎西会议决定组建川南游击纵队。" }
+      ]
+    }
+  ];
+
+  miniGame.state = { scenarios, index: 0, score: 0, answers: [] };
+  renderDecisionQuestion();
+}
+
+function renderDecisionQuestion() {
+  const s = miniGame.state;
+  if (s.index >= s.scenarios.length) {
+    const max = s.scenarios.length * 25;
+    const msgs = ["您的决策与历史完全吻合，不愧是杰出的军事家！", "多数决策正确，已领悟扎西会议的精髓。", "部分决策有待商榷，请深入学习扎西会议历史。"];
+    const idx = s.score >= max * 0.8 ? 0 : s.score >= max * 0.5 ? 1 : 2;
+    showMiniGameResult(s.score, max, "扎西会议决策结束", msgs[idx], s.score >= max * 0.8 ? "🏆" : s.score >= max * 0.5 ? "🎖️" : "📖");
+    return;
+  }
+  const sc = s.scenarios[s.index];
+  miniGameArea.innerHTML = `
+    <div class="mg-decision">
+      <div class="mg-topbar">
+        <span>📍 ${miniGame.spot.name} · 会议决策</span>
+        <span>第 ${s.index + 1}/${s.scenarios.length} 题 | 得分：${s.score}</span>
+      </div>
+      <div class="mg-scenario">${sc.q}</div>
+      <div class="mg-options">
+        ${sc.options.map((o, i) => `
+          <button class="mg-option-btn" onclick="chooseDecision(${i})">
+            <span class="mg-option-letter">${String.fromCharCode(65 + i)}</span>
+            <span>${o.text}</span>
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function chooseDecision(i) {
+  const s = miniGame.state;
+  const opt = s.scenarios[s.index].options[i];
+  if (opt.result === "good") { s.score += 25; playSound("correct"); }
+  else { playSound("wrong"); }
+  s.answers.push(opt.reason);
+
+  const feedback = document.createElement("div");
+  feedback.className = `mg-feedback ${opt.result}`;
+  feedback.innerHTML = `<div class="mg-feedback-icon">${opt.result === "good" ? "✅" : "❌"}</div><div>${opt.reason}</div>`;
+
+  miniGameArea.querySelector(".mg-options").appendChild(feedback);
+  document.querySelectorAll(".mg-option-btn").forEach(b => b.disabled = true);
+
+  setTimeout(() => {
+    s.index++;
+    renderDecisionQuestion();
+  }, 1800);
+}
+
+// ==================== 游戏2：攻克松山（点击射击·增强版） ====================
+function initShootGame() {
+  miniGame.state = { score: 0, ammo: 20, time: 45, combo: 0, maxCombo: 0, bunkers: [], max: 20 };
+  miniGameArea.innerHTML = `
+    <div class="mg-shoot">
+      <div class="mg-topbar">
+        <span>📍 松山战役 · 攻克松山</span>
+        <span>🎯 ${miniGame.state.score} | 🔫 ${miniGame.state.ammo} | ⏱ ${miniGame.state.time}s | 🔥 连击 ${miniGame.state.combo}</span>
+      </div>
+      <div class="mg-shoot-field" id="shootField"></div>
+      <div class="mg-shoot-tip">连续命中触发连击加成！弹药和时间有限，全歼日军！</div>
+    </div>
+  `;
+  miniGame.state.timer = setInterval(() => {
+    miniGame.state.time--;
+    updateShootHUD();
+    if (miniGame.state.time <= 0 || miniGame.state.ammo <= 0) endShootGame();
+  }, 1000);
+  spawnBunker();
+}
+
+function updateShootHUD() {
+  const s = miniGame.state;
+  const topbar = miniGameArea.querySelector(".mg-topbar span:last-child");
+  if (topbar) topbar.textContent = `🎯 ${s.score} | 🔫 ${s.ammo} | ⏱ ${s.time}s | 🔥 连击 ${s.combo}`;
+}
+
+function spawnBunker() {
+  if (miniGame.state.ammo <= 0 || miniGame.state.time <= 0) return;
+  const field = document.getElementById("shootField");
+  if (!field) return;
+  const bunker = document.createElement("div");
+  bunker.className = "mg-bunker";
+  const x = Math.random() * 80 + 5;
+  const y = Math.random() * 60 + 10;
+  bunker.style.left = x + "%";
+  bunker.style.top = y + "%";
+  bunker.textContent = "🏯";
+  bunker.onclick = (e) => hitBunker(bunker, e);
+  field.appendChild(bunker);
+  setTimeout(() => {
+    if (bunker.parentNode) {
+      // 未被击中，连击重置
+      miniGame.state.combo = 0;
+      updateShootHUD();
+      bunker.remove();
+    }
+  }, 2500);
+  setTimeout(spawnBunker, 700);
+}
+
+function hitBunker(bunker, e) {
+  if (miniGame.state.ammo <= 0) return;
+  const s = miniGame.state;
+  s.ammo--;
+  s.combo++;
+  if (s.combo > s.maxCombo) s.maxCombo = s.combo;
+
+  // 连击加成：每3连击+额外分数
+  const basePoints = 1;
+  const bonus = Math.floor(s.combo / 3);
+  const totalPoints = basePoints + bonus;
+  s.score += totalPoints;
+
+  playSound("shoot");
+  setTimeout(() => playSound("hit"), 50);
+  if (s.combo >= 3) playSound("combo");
+
+  bunker.textContent = "💥";
+  bunker.classList.add("mg-hit");
+
+  // 飘字特效
+  const field = document.getElementById("shootField");
+  if (field) {
+    const txt = s.combo >= 3 ? `+${totalPoints} 连击x${s.combo}!` : `+${totalPoints}`;
+    const color = s.combo >= 5 ? "#ff4500" : s.combo >= 3 ? "#ffd700" : "#ffffff";
+    floatText(field, txt, color);
+    screenShake(field, s.combo >= 5 ? 8 : 4);
+  }
+
+  updateShootHUD();
+  setTimeout(() => bunker.remove(), 300);
+}
+
+function endShootGame() {
+  if (miniGame.timer) { clearInterval(miniGame.timer); miniGame.timer = null; }
+  const s = miniGame.state;
+  playSound("win");
+  const msg = s.score >= 15 ? `远征军英雄！最高连击${s.maxCombo}，攻克松山！` : s.score >= 8 ? `战果不错，最高连击${s.maxCombo}，继续努力！` : `弹药耗尽，最高连击${s.maxCombo}，再来一次！`;
+  showMiniGameResult(s.score, s.max, "松山战役结束", msg, s.score >= 15 ? "🏆" : s.score >= 8 ? "🎖️" : "💪");
+}
+
+// ==================== 游戏3：聂耳音符记忆 ====================
+function initRhythmGame() {
+  const notes = ["do", "re", "mi", "sol", "la"];
+  const emojis = { do: "🔴", re: "🟠", mi: "🟡", sol: "🟢", la: "🔵" };
+  miniGame.state = { notes, emojis, sequence: [], playerSeq: [], round: 1, score: 0, accepting: false };
+  renderRhythmGame();
+  setTimeout(startRhythmRound, 800);
+}
+
+function renderRhythmGame() {
+  const s = miniGame.state;
+  miniGameArea.innerHTML = `
+    <div class="mg-rhythm">
+      <div class="mg-topbar">
+        <span>📍 聂耳故居 · 音符记忆</span>
+        <span>回合：${s.round} | 得分：${s.score}</span>
+      </div>
+      <div class="mg-rhythm-display" id="rhythmDisplay">准备好了吗？观察音符序列…</div>
+      <div class="mg-rhythm-pads">
+        ${s.notes.map(n => `
+          <button class="mg-pad" data-note="${n}" onclick="playNote('${n}')">
+            <span class="mg-pad-emoji">${s.emojis[n]}</span>
+            <span class="mg-pad-name">${n}</span>
+          </button>
+        `).join("")}
+      </div>
+      <div class="mg-rhythm-tip">记住亮起的音符顺序，然后依次点击复现！</div>
+    </div>
+  `;
+}
+
+function startRhythmRound() {
+  const s = miniGame.state;
+  s.accepting = false;
+  s.playerSeq = [];
+  s.sequence.push(s.notes[Math.floor(Math.random() * s.notes.length)]);
+  const display = document.getElementById("rhythmDisplay");
+  display.textContent = "👀 观察序列...";
+
+  let i = 0;
+  const showNext = () => {
+    if (i >= s.sequence.length) {
+      display.textContent = "👆 轮到你了！按顺序点击音符";
+      s.accepting = true;
+      return;
+    }
+    const note = s.sequence[i];
+    playNoteSound(note);
+    const pad = document.querySelector(`.mg-pad[data-note="${note}"]`);
+    if (pad) pad.classList.add("mg-pad-active");
+    setTimeout(() => {
+      if (pad) pad.classList.remove("mg-pad-active");
+      i++;
+      setTimeout(showNext, 200);
+    }, 500);
+  };
+  setTimeout(showNext, 600);
+}
+
+// 音符频率映射（C大调）
+const noteFreqs = { do: 261.63, re: 293.66, mi: 329.63, sol: 392.00, la: 440.00 };
+
+function playNoteSound(note) {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const freq = noteFreqs[note] || 440;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.frequency.value = freq;
+  osc.type = "sine";
+  gain.gain.setValueAtTime(0.2, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+  osc.start(); osc.stop(ctx.currentTime + 0.4);
+}
+
+function playNote(note) {
+  const s = miniGame.state;
+  if (!s.accepting) return;
+  playNoteSound(note);
+  const pad = document.querySelector(`.mg-pad[data-note="${note}"]`);
+  if (pad) { pad.classList.add("mg-pad-active"); setTimeout(() => pad.classList.remove("mg-pad-active"), 200); }
+  s.playerSeq.push(note);
+  const idx = s.playerSeq.length - 1;
+  if (s.playerSeq[idx] !== s.sequence[idx]) {
+    s.accepting = false;
+    playSound("wrong");
+    const display = document.getElementById("rhythmDisplay");
+    display.textContent = "❌ 错误！序列结束";
+    setTimeout(() => showMiniGameResult(s.score, 100, "音符记忆结束", `你坚持到了第 ${s.round} 回合，复现了 ${s.score} 个音符。`, s.score >= 15 ? "🏆" : s.score >= 8 ? "🎖️" : "🎵"), 1200);
+    return;
+  }
+  s.score++;
+  if (s.playerSeq.length === s.sequence.length) {
+    s.accepting = false;
+    playSound("correct");
+    s.round++;
+    const display = document.getElementById("rhythmDisplay");
+    display.textContent = "✅ 正确！下一回合...";
+    setTimeout(startRhythmRound, 1000);
+  }
+}
+
+// ==================== 游戏4：讲武堂军事打靶 ====================
+function initTargetGame() {
+  miniGame.state = { score: 0, time: 30, max: 30 };
+  miniGameArea.innerHTML = `
+    <div class="mg-target-game">
+      <div class="mg-topbar">
+        <span>📍 云南陆军讲武堂 · 军事打靶</span>
+        <span>🎯 命中：${miniGame.state.score} | ⏱ ${miniGame.state.time}s</span>
+      </div>
+      <div class="mg-target-field" id="targetField"></div>
+      <div class="mg-shoot-tip">限时30秒，快速点击移动靶标！靶标越大越容易但分少，小靶标分高！</div>
+    </div>
+  `;
+  miniGame.state.timer = setInterval(() => {
+    miniGame.state.time--;
+    const topbar = miniGameArea.querySelector(".mg-topbar span:last-child");
+    if (topbar) topbar.textContent = `🎯 命中：${miniGame.state.score} | ⏱ ${miniGame.state.time}s`;
+    if (miniGame.state.time <= 0) endTargetGame();
+  }, 1000);
+  spawnTarget();
+}
+
+function spawnTarget() {
+  if (miniGame.state.time <= 0) return;
+  const field = document.getElementById("targetField");
+  if (!field) return;
+  const target = document.createElement("div");
+  const size = Math.random() * 40 + 30;
+  const points = Math.round(60 - size);
+  target.className = "mg-target";
+  target.style.width = size + "px";
+  target.style.height = size + "px";
+  target.style.left = Math.random() * 85 + "%";
+  target.style.top = Math.random() * 75 + "%";
+  target.dataset.points = points;
+  target.textContent = "🎯";
+  target.onclick = () => {
+    miniGame.state.score += points;
+    playSound("hit");
+    target.remove();
+    const topbar = miniGameArea.querySelector(".mg-topbar span:last-child");
+    if (topbar) topbar.textContent = `🎯 ${miniGame.state.score} | ⏱ ${miniGame.state.time}s`;
+  };
+  field.appendChild(target);
+  setTimeout(() => { if (target.parentNode) target.remove(); }, 1500);
+  setTimeout(spawnTarget, 600);
+}
+
+function endTargetGame() {
+  if (miniGame.timer) { clearInterval(miniGame.timer); miniGame.timer = null; }
+  const s = miniGame.state;
+  const msg = s.score >= 150 ? "神枪手！讲武堂的训练让你百发百中！" : s.score >= 80 ? "枪法不错，继续操练必成大器！" : "还需多加练习，革命军人要有过硬本领！";
+  showMiniGameResult(s.score, s.max, "打靶训练结束", msg, s.score >= 150 ? "🏆" : s.score >= 80 ? "🎖️" : "🎯");
+}
+
+// ==================== 游戏5：红色记忆翻牌 ====================
+function initMemoryGame() {
+  const spot = miniGame.spot;
+  const figures = spot.figures.slice(0, 6);
+  const pairs = figures.map(f => ({ name: f.name, desc: f.role }));
+  const cards = [];
+  pairs.forEach((p, i) => {
+    cards.push({ id: "n" + i, text: p.name, matchId: i, type: "name" });
+    cards.push({ id: "d" + i, text: p.desc, matchId: i, type: "desc" });
+  });
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  miniGame.state = { cards, flipped: [], matched: [], moves: 0, score: 0, max: pairs.length * 10 };
+  renderMemoryGame();
+}
+
+function renderMemoryGame() {
+  const s = miniGame.state;
+  miniGameArea.innerHTML = `
+    <div class="mg-memory">
+      <div class="mg-topbar">
+        <span>📍 ${miniGame.spot.name} · 红色记忆翻牌</span>
+        <span>配对：${s.matched.length / 2}/${s.max / 10} | 步数：${s.moves} | 得分：${s.score}</span>
+      </div>
+      <div class="mg-memory-grid">
+        ${s.cards.map((c, i) => {
+          const isFlipped = s.flipped.includes(i) || s.matched.includes(i);
+          return `
+            <div class="mg-card ${isFlipped ? 'mg-flipped' : ''}" onclick="flipCard(${i})">
+              <div class="mg-card-inner">
+                <div class="mg-card-front">?</div>
+                <div class="mg-card-back ${c.type}">${c.text}</div>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+      <div class="mg-rhythm-tip">将历史人物与他们的身份/事迹正确配对！</div>
+    </div>
+  `;
+}
+
+function flipCard(i) {
+  const s = miniGame.state;
+  if (s.flipped.includes(i) || s.matched.includes(i) || s.flipped.length >= 2) return;
+  playSound("click");
+  s.flipped.push(i);
+  renderMemoryGame();
+  if (s.flipped.length === 2) {
+    s.moves++;
+    const [a, b] = s.flipped;
+    if (s.cards[a].matchId === s.cards[b].matchId && s.cards[a].type !== s.cards[b].type) {
+      s.matched.push(a, b);
+      s.score += 10;
+      s.flipped = [];
+      setTimeout(() => {
+        playSound("correct");
+        renderMemoryGame();
+        if (s.matched.length === s.cards.length) {
+          playSound("win");
+          const msg = `用 ${s.moves} 步完成全部配对！红色记忆已深植心中。`;
+          showMiniGameResult(s.score, s.max, "记忆翻牌完成", msg, s.moves <= 12 ? "🏆" : "🎖️");
+        }
+      }, 400);
+    } else {
+      playSound("wrong");
+      setTimeout(() => { s.flipped = []; renderMemoryGame(); }, 800);
+    }
+  }
+}
+
+// ==================== 游戏6：长征行军路线（虎头山） ====================
+function initRouteGame() {
+  const spot = miniGame.spot;
+  miniGame.state = {
+    rounds: [
+      { q: "红军从贵州进入云南，敌军前堵后追。选择行进方向：", options: [{ text: "直插昆明", result: "bad", reason: "昆明有滇军主力，强攻不利。" }, { text: "绕经宣威", result: "good", reason: "正确！红军经宣威向滇东北挺进。" }] },
+      { q: "在宣威虎头山遭遇滇军追击，你选择：", options: [{ text: "设伏迎击", result: "good", reason: "正确！虎头山战斗重创滇军。" }, { text: "仓皇撤退", result: "bad", reason: "撤退将暴露破绽，损失更大。" }] },
+      { q: "虎头山战斗后，下一步策略：", options: [{ text: "乘胜北上", result: "good", reason: "正确！继续北上与红四方面军会师。" }, { text: "原地固守", result: "bad", reason: "敌军增援将至，固守必被围。" }] },
+      { q: "面对金沙江天险，你选择：", options: [{ text: "佯攻别处，主力巧渡", result: "good", reason: "正确！红军佯攻昆明，主力巧渡金沙江。" }, { text: "正面强渡", result: "bad", reason: "敌军控制江岸，强渡伤亡惨重。" }] }
+    ],
+    index: 0, score: 0
+  };
+  renderRouteQuestion();
+}
+
+function renderRouteQuestion() {
+  const s = miniGame.state;
+  if (s.index >= s.rounds.length) {
+    const max = s.rounds.length * 25;
+    const msg = s.score >= max * 0.8 ? "伟大的指挥员！你带领红军胜利北上！" : s.score >= max * 0.5 ? "路线基本正确，长征精神永存！" : "路线选择有误，请学习红军长征史。";
+    showMiniGameResult(s.score, max, "长征行军结束", msg, s.score >= max * 0.8 ? "🏆" : s.score >= max * 0.5 ? "🎖️" : "🗺️");
+    return;
+  }
+  const r = s.rounds[s.index];
+  miniGameArea.innerHTML = `
+    <div class="mg-decision">
+      <div class="mg-topbar">
+        <span>📍 ${miniGame.spot.name} · 长征行军</span>
+        <span>第 ${s.index + 1}/${s.rounds.length} 站 | 得分：${s.score}</span>
+      </div>
+      <div class="mg-scenario">${r.q}</div>
+      <div class="mg-options">
+        ${r.options.map((o, i) => `
+          <button class="mg-option-btn" onclick="chooseRoute(${i})">
+            <span class="mg-option-letter">${String.fromCharCode(65 + i)}</span>
+            <span>${o.text}</span>
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function chooseRoute(i) {
+  const s = miniGame.state;
+  const opt = s.rounds[s.index].options[i];
+  if (opt.result === "good") { s.score += 25; playSound("correct"); }
+  else { playSound("wrong"); }
+  const feedback = document.createElement("div");
+  feedback.className = `mg-feedback ${opt.result}`;
+  feedback.innerHTML = `<div class="mg-feedback-icon">${opt.result === "good" ? "✅" : "❌"}</div><div>${opt.reason}</div>`;
+  miniGameArea.querySelector(".mg-options").appendChild(feedback);
+  document.querySelectorAll(".mg-option-btn").forEach(b => b.disabled = true);
+  setTimeout(() => { s.index++; renderRouteQuestion(); }, 1800);
+}
+
+// ==================== 游戏7：畹町桥物资运输 ====================
+function initLogisticsGame() {
+  miniGame.state = { delivered: 0, lost: 0, time: 40, max: 20 };
+  miniGameArea.innerHTML = `
+    <div class="mg-logistics">
+      <div class="mg-topbar">
+        <span>📍 畹町桥 · 生命线运输</span>
+        <span>🚚 已运：${miniGame.state.delivered} | 💥 损失：${miniGame.state.lost} | ⏱ ${miniGame.state.time}s</span>
+      </div>
+      <div class="mg-logistics-field">
+        <div class="mg-bridge">🌉 畹町桥 🌉</div>
+        <div class="mg-truck-lane" id="truckLane"></div>
+        <div class="mg-bomber-zone" id="bomberZone"></div>
+      </div>
+      <div class="mg-shoot-tip">点击过桥的物资车让它加速通过！避开日军空袭（💣），保护援华物资！</div>
+    </div>
+  `;
+  miniGame.state.timer = setInterval(() => {
+    miniGame.state.time--;
+    const topbar = miniGameArea.querySelector(".mg-topbar span:last-child");
+    if (topbar) topbar.textContent = `🚚 已运：${miniGame.state.delivered} | 💥 损失：${miniGame.state.lost} | ⏱ ${miniGame.state.time}s`;
+    if (miniGame.state.time <= 0) endLogisticsGame();
+  }, 1000);
+  spawnTruck();
+  spawnBomber();
+}
+
+function spawnTruck() {
+  if (miniGame.state.time <= 0) return;
+  const lane = document.getElementById("truckLane");
+  if (!lane) return;
+  const truck = document.createElement("div");
+  truck.className = "mg-truck";
+  truck.textContent = "🚚";
+  truck.style.left = "-40px";
+  truck.onclick = () => {
+    playSound("click");
+    truck.style.transition = "left 1s linear";
+    truck.style.left = "110%";
+    setTimeout(() => {
+      if (truck.parentNode) { truck.remove(); miniGame.state.delivered++; playSound("correct"); updateLogisticsHUD(); }
+    }, 1000);
+  };
+  lane.appendChild(truck);
+  // 自然通过
+  setTimeout(() => {
+    truck.style.transition = "left 4s linear";
+    truck.style.left = "110%";
+    setTimeout(() => { if (truck.parentNode) { truck.remove(); miniGame.state.delivered++; updateLogisticsHUD(); } }, 4000);
+  }, 2000);
+  setTimeout(spawnTruck, 2500);
+}
+
+function spawnBomber() {
+  if (miniGame.state.time <= 0) return;
+  const zone = document.getElementById("bomberZone");
+  if (!zone) return;
+  const bomb = document.createElement("div");
+  bomb.className = "mg-bomb";
+  bomb.textContent = "💣";
+  bomb.style.left = Math.random() * 70 + 10 + "%";
+  bomb.style.top = "0";
+  bomb.style.animation = "mg-bomb-fall 1.5s linear forwards";
+  bomb.onclick = () => { bomb.remove(); miniGame.state.delivered += 2; updateLogisticsHUD(); };
+  zone.appendChild(bomb);
+  setTimeout(() => {
+    if (bomb.parentNode) {
+      bomb.remove();
+      // 炸到附近的卡车
+      const trucks = document.querySelectorAll(".mg-truck");
+      if (trucks.length > 0) {
+        trucks[0].remove();
+        miniGame.state.lost++;
+        updateLogisticsHUD();
+      }
+    }
+  }, 1500);
+  setTimeout(spawnBomber, 2000);
+}
+
+function updateLogisticsHUD() {
+  const topbar = miniGameArea.querySelector(".mg-topbar span:last-child");
+  if (topbar) topbar.textContent = `🚚 已运：${miniGame.state.delivered} | 💥 损失：${miniGame.state.lost} | ⏱ ${miniGame.state.time}s`;
+}
+
+function endLogisticsGame() {
+  if (miniGame.timer) { clearInterval(miniGame.timer); miniGame.timer = null; }
+  const s = miniGame.state;
+  const msg = s.delivered >= 15 ? "生命线守护者！大量援华物资安全送达前线！" : s.delivered >= 8 ? "运输任务完成不错，继续保障抗战生命线！" : "物资损失较大，抗战生命线需要更好的保护！";
+  showMiniGameResult(s.delivered, s.max, "运输任务结束", msg, s.delivered >= 15 ? "🏆" : s.delivered >= 8 ? "🎖️" : "🚚");
+}
+
+// 绑定场景小游戏按钮
+startMiniGameBtn.addEventListener("click", handleStartMiniGame);
+
+// 景区选择变化时更新推荐类型
+spotSelect.addEventListener("change", () => {
+  const spot = knowledgeBase[spotSelect.value];
+  if (spot) {
+    const autoOption = typeSelect.querySelector('option[value="自动判断"]');
+    if (autoOption) {
+      autoOption.textContent = `自动判断（推荐：${spot.recommendedScript}）`;
+    }
+  }
+});
+
+// 初始化
+initSpotSelect();
+
+</script>
+
+</body>
+</html>
